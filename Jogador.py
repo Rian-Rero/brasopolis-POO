@@ -7,8 +7,12 @@ class Jogador:
         self.preso = False
     
     def pagar (self, valor):
-        self.saldo -= valor
-        print(f'O jogador {self.nome} pagou {valor}. Saldo atual {self.saldo}')
+        if self.saldo >= valor:
+            self.saldo -= valor
+            print(f'O jogador {self.nome} pagou {valor}. Saldo atual {self.saldo}')
+        else:
+            print(f'O jogador {self.nome} não tem dinheiro suficiente para pagar {valor}.')
+
 
     def receber (self, valor):
         self.saldo += valor

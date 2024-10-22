@@ -1,4 +1,4 @@
-from Brasópolis import Dado
+import Dado
 
 class jogo:
     def __init__(self, jogadores, tabuleiro):
