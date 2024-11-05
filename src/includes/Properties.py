@@ -1,10 +1,10 @@
 from Player import Player
 class Properties:
     def __init__(self, name, price, rent, owner):
-        self.name=name
-        self.price=price
-        self.remt=rent
-        self.owner=None
+        self.name = name
+        self.price = price
+        self.remt = rent
+        self.ownerID = None
     def buy(self, player):
         if self.owner is None:  
             if player.money >= self.price: 
