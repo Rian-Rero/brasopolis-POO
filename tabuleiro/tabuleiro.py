@@ -4,28 +4,26 @@ import sys
 # Inicializar o Pygame
 pygame.init()
 
-# Definir as dimensões da janela e do tabuleiro
-WIDTH, HEIGHT = 1200, 800  # Ajustar proporções para retangular
+# Dimensões da janela e tabuleiro
+BOARD_WIDTH, HEIGHT = 900, 800  # Largura reduzida para dar espaço à janela lateral
+SIDE_PANEL_WIDTH = 300
+WIDTH = BOARD_WIDTH + SIDE_PANEL_WIDTH
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Brasópolis")
 
 # Cores
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-RED = (255, 0, 0)  # Cor para o personagem
+RED = (255, 0, 0)
 
 # Configurações do tabuleiro
-HORIZONTAL_CELLS = 14  # Número de casas horizontais (superior/inferior)
-VERTICAL_CELLS = 6     # Número de casas verticais (laterais)
+HORIZONTAL_CELLS = 14
+VERTICAL_CELLS = 6
 TOTAL_CELLS = HORIZONTAL_CELLS * 2 + VERTICAL_CELLS * 2
-CELL_WIDTH = WIDTH // HORIZONTAL_CELLS
+CELL_WIDTH = BOARD_WIDTH // HORIZONTAL_CELLS
 CELL_HEIGHT = HEIGHT // (VERTICAL_CELLS + 2)
 
-# Verificando caminho das imagens
-import os
-print("Caminho atual:", os.getcwd())
-
-# Carregar imagens para as casas
+# Carregar imagens das casas
 images = []
 for i in range(1, TOTAL_CELLS + 1):
     try:
@@ -36,74 +34,50 @@ for i in range(1, TOTAL_CELLS + 1):
         images.append(None)
 
 # Configuração do personagem
-player_pos = 0  # Posição inicial do jogador na borda
+player_pos = 0  # Posição inicial do jogador
+
+# Texto descritivo das casas
+house_descriptions = [f"Descrição da Casa {i}" for i in range(1, TOTAL_CELLS + 1)]
 
 # Função para desenhar o tabuleiro
 def draw_board():
-    # Bordas horizontais superiores
     for col in range(HORIZONTAL_CELLS):
         x = col * CELL_WIDTH
         y = 0
         draw_cell(x, y, col)
-
-    # Bordas verticais direitas
     for row in range(1, VERTICAL_CELLS + 1):
-        x = WIDTH - CELL_WIDTH
+        x = BOARD_WIDTH - CELL_WIDTH
         y = row * CELL_HEIGHT
         draw_cell(x, y, HORIZONTAL_CELLS + row - 1)
-
-    # Bordas horizontais inferiores
     for col in range(HORIZONTAL_CELLS):
-        x = WIDTH - (col + 1) * CELL_WIDTH
+        x = BOARD_WIDTH - (col + 1) * CELL_WIDTH
         y = HEIGHT - CELL_HEIGHT
         draw_cell(x, y, HORIZONTAL_CELLS + VERTICAL_CELLS + col)
-
-    # Bordas verticais esquerdas
     for row in range(1, VERTICAL_CELLS + 1):
         x = 0
         y = HEIGHT - (row + 1) * CELL_HEIGHT
         draw_cell(x, y, 2 * HORIZONTAL_CELLS + VERTICAL_CELLS + row - 1)
 
-    # Espaço central
-    pygame.draw.rect(
-        screen,
-        WHITE,
-        (CELL_WIDTH, CELL_HEIGHT, WIDTH - 2 * CELL_WIDTH, HEIGHT - 2 * CELL_HEIGHT),
-    )
+    pygame.draw.rect(screen, WHITE, (CELL_WIDTH, CELL_HEIGHT, BOARD_WIDTH - 2 * CELL_WIDTH, HEIGHT - 2 * CELL_HEIGHT))
 
-# Função para desenhar uma casa individual
 def draw_cell(x, y, index):
-    # Alternar cores
-    #color = WHITE if index % 2 == 0 else BLACK
-    #pygame.draw.rect(screen, color, (x, y, CELL_WIDTH, CELL_HEIGHT))
-
-    # Inserir a imagem na casa, se disponível
     if images[index] is not None:
         screen.blit(images[index], (x, y))
 
-    # Desenhar número da casa
-    #font = pygame.font.Font(None, 36)
-    #text = font.render(str(index + 1), True, BLACK if color == WHITE else WHITE)
-    #text_rect = text.get_rect(center=(x + CELL_WIDTH // 2, y + CELL_HEIGHT // 2))
-    #screen.blit(text, text_rect)
-
-# Função para desenhar o personagem
 def draw_player():
     x, y = get_player_position(player_pos)
     pygame.draw.circle(screen, RED, (x + CELL_WIDTH // 2, y + CELL_HEIGHT // 2), 20)
 
-# Calcular posição do jogador
 def get_player_position(position):
-    if position < HORIZONTAL_CELLS:  # Topo
+    if position < HORIZONTAL_CELLS:
         return position * CELL_WIDTH, 0
-    elif position < HORIZONTAL_CELLS + VERTICAL_CELLS:  # Direita
-        return WIDTH - CELL_WIDTH, (position - HORIZONTAL_CELLS + 1) * CELL_HEIGHT
-    elif position < 2 * HORIZONTAL_CELLS + VERTICAL_CELLS:  # Base
-        return WIDTH - (position - HORIZONTAL_CELLS - VERTICAL_CELLS + 1) * CELL_WIDTH, HEIGHT - CELL_HEIGHT
-    else:  # Esquerda
+    elif position < HORIZONTAL_CELLS + VERTICAL_CELLS:
+        return BOARD_WIDTH - CELL_WIDTH, (position - HORIZONTAL_CELLS + 1) * CELL_HEIGHT
+    elif position < 2 * HORIZONTAL_CELLS + VERTICAL_CELLS:
+        return BOARD_WIDTH - (position - HORIZONTAL_CELLS - VERTICAL_CELLS + 1) * CELL_WIDTH, HEIGHT - CELL_HEIGHT
+    else:
         return 0, HEIGHT - (position - 2 * HORIZONTAL_CELLS - VERTICAL_CELLS + 1) * CELL_HEIGHT
 
-# Função para mover o jogador
 def move_player(key):
     global player_pos
     if key == pygame.K_RIGHT:
@@ -111,7 +85,37 @@ def move_player(key):
     elif key == pygame.K_LEFT:
         player_pos = (player_pos - 1) % TOTAL_CELLS
 
-# Loop principal do jogo
+def draw_side_panel():
+    pygame.draw.rect(screen, WHITE, (BOARD_WIDTH, 0, SIDE_PANEL_WIDTH, HEIGHT))
+    font = pygame.font.Font(None, 36)
+
+    # Imagem da casa
+    if images[player_pos] is not None:
+        original_width, original_height = images[player_pos].get_size()
+
+        # Calcular as dimensões escaladas mantendo a proporção 3:4
+        target_width = SIDE_PANEL_WIDTH - 20
+        target_height = int(target_width * 4 / 3)
+
+        # Garantir que a imagem caiba no painel sem ultrapassar o limite
+        if target_height > HEIGHT // 2:
+            target_height = HEIGHT // 2
+            target_width = int(target_height * 3 / 4)
+
+        # Redimensionar a imagem
+        scaled_image = pygame.transform.scale(images[player_pos], (target_width, target_height))
+
+        # Centralizar a imagem no painel lateral
+        image_x = BOARD_WIDTH + (SIDE_PANEL_WIDTH - target_width) // 2
+        image_y = 20
+        screen.blit(scaled_image, (image_x, image_y))
+
+    # Texto descritivo
+    text = font.render(house_descriptions[player_pos], True, BLACK)
+    text_rect = text.get_rect(midtop=(BOARD_WIDTH + SIDE_PANEL_WIDTH // 2, HEIGHT // 3 + 40))
+    screen.blit(text, text_rect)
+
+
 def main():
     clock = pygame.time.Clock()
 
@@ -123,12 +127,11 @@ def main():
             elif event.type == pygame.KEYDOWN:
                 move_player(event.key)
 
-        # Atualizar a tela
         screen.fill(WHITE)
         draw_board()
         draw_player()
+        draw_side_panel()
         pygame.display.flip()
         clock.tick(30)
 
-# Executar o jogo
 main()
