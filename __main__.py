@@ -41,9 +41,9 @@ while running:
             if (
                 event.key == pygame.K_PLUS or event.key == pygame.K_EQUALS
             ):  # Tecla '+' ou '='
-                zoom = min(zoom + 0.1, max_zoom)
+                zoom = min(zoom + 0.05, max_zoom)
             elif event.key == pygame.K_MINUS:  # Tecla '-'
-                zoom = max(zoom - 0.1, min_zoom)
+                zoom = max(zoom - 0.05, min_zoom)
             elif event.key == pygame.K_ESCAPE:  # Tecla 'ESC' para do fullscreen
                 running = False
 
