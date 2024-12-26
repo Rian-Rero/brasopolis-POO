@@ -32,6 +32,7 @@ class Properties:
         owner_name = self.owner.name if self.owner else "Nenhum"
         return f"Propriedade: {self.name}, Preço: {self.price}, Status: {'Vendido' if self.status else 'Disponível'}, Aluguel: {self.rent}, Proprietário: {owner_name}"
 
+
 #aluguel = 5% do valor da prop.
 p1=Properties("São Paulo", 950000, True, 47500, None)
 p2=Properties("Varginha", 330000, True, 16500, None)
