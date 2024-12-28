@@ -14,8 +14,8 @@ class GainMoney(Cart):
         self.amount = 500000
 
     def executeAction(self, player):
-        print(f"Executando ação da carta: {self.description}")
         player.gain_money(self.amount)
+        print(f"{player.name} ganhou {self.amount}! Novo saldo: {player.balance}")
 
 class LoseMoney(Cart):
     def __init__(self, description, amount):
@@ -23,5 +23,5 @@ class LoseMoney(Cart):
         self.amount = 300000
 
     def executeAction(self, player):
-        print(f"Executando ação da carta: {self.description}")
         player.lose_money(self.amount)
+        print(f"{player.name} perdeu {self.amount}! Novo saldo: {player.balance}")

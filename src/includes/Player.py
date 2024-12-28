@@ -1,5 +1,7 @@
+from Cards import GainMoney, LoseMoney
+
 class Player:
-    def __init__(self, name, balance, position, properties, isRested):
+    def __init__(self, name, balance, position, properties=None, isRested=True):
         self.name = name
         self.balance = balance
         self.position = position
@@ -20,3 +22,10 @@ class Player:
         print(
             f"The player {self.name} received {value}. Current balance: {self.balance}"
         )
+
+    def gain_money(self, amount):
+        self.receive(amount)
+
+    def lose_money(self, amount):
+        self.pay(amount)
+
