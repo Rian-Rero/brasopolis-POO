@@ -89,7 +89,9 @@
  <objectgroup id="3" name="Objects">
   <object id="4" name="Início" x="0" y="0" width="377" height="379.5">
    <properties>
+    <property name="customName" value="Início"/>
     <property name="customType" value="Início"/>
+    <property name="customPrice" type="float" value="200000"/>
    </properties>
   </object>
   <object id="9" name="São Paulo - SP" x="378.5" y="1" width="294" height="378.5">

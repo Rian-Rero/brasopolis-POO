@@ -7,7 +7,7 @@ class UserInterface:
         self.screen = screen
         self.font = pygame.font.Font(None, 50)
         self.small_font = pygame.font.Font(None, 35)
-        self.users_file = "/caminho/absoluto/users.txt"
+        self.users_file = "src/DataBase/users.txt"
 
     def show_player_count_selection(self):
         """Exibe uma tela para o jogador selecionar a quantidade de jogadores."""
@@ -22,10 +22,28 @@ class UserInterface:
             )
 
             # Botões para 2, 3 ou 4 jogadores
+            screen_width, screen_height = self.screen.get_size()
+            button_width, button_height = screen_width // 6, screen_height // 12
+
             buttons = {
-                "2": pygame.Rect(300, 200, 200, 50),
-                "3": pygame.Rect(300, 300, 200, 50),
-                "4": pygame.Rect(300, 400, 200, 50),
+                "2": pygame.Rect(
+                    (screen_width - button_width) // 2,
+                    screen_height // 3,
+                    button_width,
+                    button_height,
+                ),
+                "3": pygame.Rect(
+                    (screen_width - button_width) // 2,
+                    screen_height // 3 + button_height + 20,
+                    button_width,
+                    button_height,
+                ),
+                "4": pygame.Rect(
+                    (screen_width - button_width) // 2,
+                    screen_height // 3 + 2 * (button_height + 20),
+                    button_width,
+                    button_height,
+                ),
             }
 
             # Desenhar botões
@@ -105,10 +123,46 @@ class UserInterface:
 
         return players
 
-    def draw_text(self, text, x, y, font=None, color=(255, 255, 255)):
+    def draw_text(self, text, x, y, font=None, color=(BLACK)):
         """Desenha texto na tela."""
         if font is None:
             font = self.font
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect(center=(x, y))
         self.screen.blit(text_surface, text_rect)
+
+    def draw_interface(self, screen, current_player):
+        """Exibe informações sobre o jogador atual e outras estatísticas do jogo."""
+        screen_width = screen.get_width()
+
+        # Nome do jogador atual
+        self.draw_text(
+            f"Jogador atual: {current_player.name}",
+            screen_width // 2,
+            20,
+            font=self.small_font,
+            color=(255, 255, 255),
+        )
+
+        # Exemplo: Mostrar saldo do jogador
+        self.draw_text(
+            f"Saldo: R$ {current_player.money:.2f}",
+            screen_width // 2,
+            60,
+            font=self.small_font,
+            color=(255, 255, 255),
+        )
+
+        def is_user_registered(self, username):
+            """Verifica se o usuário já está registrado no arquivo."""
+            try:
+                with open(self.users_file, "r") as file:
+                    users = file.readlines()
+                return username in (user.strip() for user in users)
+            except FileNotFoundError:
+                return False
+
+        def register_user(self, username):
+            """Registra um novo usuário no arquivo."""
+            with open(self.users_file, "a") as file:
+                file.write(f"{username}\n")
