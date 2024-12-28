@@ -14,7 +14,7 @@ class UserInterface:
         running = True
         selected_count = None
         while running:
-            self.screen.fill((0, 50, 100))
+            self.screen.fill((45, 86, 80))
             self.draw_text(
                 "Selecione o número de jogadores (2 a 4):",
                 self.screen.get_width() // 2,
@@ -48,14 +48,14 @@ class UserInterface:
 
             # Desenhar botões
             for label, rect in buttons.items():
-                pygame.draw.rect(self.screen, (200, 200, 200), rect)
+                pygame.draw.rect(self.screen, (111, 185, 174), rect)
                 # Desenhar texto sobre o botão
                 self.draw_text(
                     label,
                     rect.centerx,
                     rect.centery,
                     font=self.small_font,
-                    color=(0, 0, 0),
+                    color=(255, 255, 255),
                 )
 
             pygame.display.flip()
@@ -79,7 +79,7 @@ class UserInterface:
             running = True
             username = ""
             while running:
-                self.screen.fill((0, 50, 100))
+                self.screen.fill((45, 86, 80))
                 self.draw_text(
                     f"Jogador {i}: Digite seu nome:", self.screen.get_width() // 2, 100
                 )
@@ -93,7 +93,7 @@ class UserInterface:
 
                 # Botão de confirmar
                 confirm_button = pygame.Rect(350, 300, 200, 50)
-                pygame.draw.rect(self.screen, (200, 200, 200), confirm_button)
+                pygame.draw.rect(self.screen, (111, 185, 174), confirm_button)
                 self.draw_text(
                     "Confirmar",
                     confirm_button.centerx,
