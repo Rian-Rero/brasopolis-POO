@@ -139,7 +139,7 @@ class UserInterface:
         self.draw_text(
             f"Jogador atual: {current_player.name}",
             screen_width // 2,
-            20,
+            30,
             font=self.small_font,
             color=(255, 255, 255),
         )

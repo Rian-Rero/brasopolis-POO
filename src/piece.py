@@ -2,8 +2,6 @@ import pygame
 
 
 class Piece:
-    """Representa uma peça que se move no tabuleiro."""
-
     def __init__(self, color, initial_house):
         self.color = color
         self.current_house = initial_house
@@ -14,6 +12,11 @@ class Piece:
         self.current_house = house
         self.position = house.rect.center
 
-    def draw(self, screen):
-        """Desenha a peça na posição atual."""
-        pygame.draw.circle(screen, self.color, self.position, 15)
+    def draw(self, screen, zoom, offset):
+        """Desenha a peça considerando o zoom e deslocamento do tabuleiro."""
+        # Ajustar posição ao zoom
+        scaled_position = (
+            int(self.position[0] * zoom + offset[0]),
+            int(self.position[1] * zoom + offset[1]),
+        )
+        pygame.draw.circle(screen, self.color, scaled_position, int(40 * zoom))

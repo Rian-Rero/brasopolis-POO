@@ -27,11 +27,20 @@ class Brasopolis:
         self.game_loop()
 
     def initialize_pieces(self):
-        colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0)]
+        """Inicializa as peças dos jogadores no tabuleiro."""
+        colors = [
+            (255, 0, 0),
+            (0, 255, 0),
+            (0, 0, 255),
+            (255, 255, 0),
+        ]  # Cores das peças
         for i, player in enumerate(self.players):
-            initial_house = self.board.houses[0]
+            initial_house = self.board.houses[
+                0
+            ]  # Casa inicial é a primeira do tabuleiro
             piece = Piece(color=colors[i % len(colors)], initial_house=initial_house)
             player.piece = piece
+            self.pieces.append(piece)
 
     def switch_turn(self):
         """Alterna o turno entre os jogadores."""
@@ -65,8 +74,14 @@ class Brasopolis:
             # Desenhar elementos na tela
             self.screen.fill((0, 0, 0))
             self.board.draw(self.screen)
+
+            # Obter retângulo do mapa para desenhar peças corretamente
+            map_rect = self.board.get_scaled_map().get_rect(
+                center=(self.screen.get_width() // 2, self.screen.get_height() // 2)
+            )
             for piece in self.pieces:
-                piece.draw(self.screen)
+                piece.draw(self.screen, self.board.zoom, (map_rect.left, map_rect.top))
+
             self.ui.draw_interface(self.screen, self.players[self.current_player])
 
             pygame.display.flip()
