@@ -176,14 +176,16 @@
   <object id="21" name="Faz o L" x="3626.5" y="-0.5" width="295" height="379.5">
    <properties>
     <property name="customName" value="Faz o L"/>
-    <property name="customPrice" type="float" value="3e+05"/>
+    <property name="customPrice" type="float" value="0"/>
+    <property name="customLoss" type="float" value="3e+05"/>
     <property name="customType" value="Lula"/>
    </properties>
   </object>
   <object id="22" name="Cadeia" x="3922" y="1.5" width="366" height="377">
    <properties>
     <property name="customName" value="Lula's House"/>
-    <property name="customPrice" type="float" value="2e+05"/>
+    <property name="customPrice" type="float" value="0"/>
+    <property name="customLoss" type="float" value="2e+05"/>
     <property name="customType" value="Cadeia"/>
    </properties>
   </object>

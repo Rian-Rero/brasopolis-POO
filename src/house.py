@@ -11,6 +11,7 @@ class House:
         custom_type,
         custom_price,
         custom_gain,
+        custom_loss,
         x,
         y,
         width,
@@ -21,6 +22,7 @@ class House:
         self.custom_type = custom_type
         self.custom_price = custom_price
         self.custom_gain = custom_gain
+        self.custom_loss = custom_loss
         self.x = x
         self.y = y
         self.width = width
