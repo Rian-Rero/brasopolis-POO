@@ -44,6 +44,7 @@ class Board:
                 custom_name=obj.properties.get("customName", "Sem Nome"),
                 custom_type=custom_type,
                 custom_price=obj.properties.get("customPrice", 0),
+                custom_gain=obj.properties.get("customGain", 0),
                 x=obj.x,
                 y=obj.y,
                 width=obj.width,

@@ -5,12 +5,22 @@ class House:
     """Representa uma casa no tabuleiro."""
 
     def __init__(
-        self, name, custom_name, custom_type, custom_price, x, y, width, height
+        self,
+        name,
+        custom_name,
+        custom_type,
+        custom_price,
+        custom_gain,
+        x,
+        y,
+        width,
+        height,
     ):
         self.name = name
         self.custom_name = custom_name
         self.custom_type = custom_type
         self.custom_price = custom_price
+        self.custom_gain = custom_gain
         self.x = x
         self.y = y
         self.width = width

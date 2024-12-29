@@ -195,7 +195,7 @@ class UserInterface:
             color=(BLACK),
         )
         self.draw_text(
-            f"{current_piece.current_house.custom_price:.2f}",
+            f"{(current_piece.current_house.custom_price)*0.05:.2f}",
             (aluguel_interact.x * zoom + offset[0]) * 1.08,
             (aluguel_interact.y * zoom + offset[1]) * 1.02,
             font=self.small_font,

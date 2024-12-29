@@ -90,7 +90,8 @@
   <object id="4" name="Início" x="0" y="0" width="377" height="379.5">
    <properties>
     <property name="customName" value="Início"/>
-    <property name="customPrice" type="float" value="2e+05"/>
+    <property name="customGain" type="float" value="2e+05"/>
+    <property name="customPrice" type="float" value="0"/>
     <property name="customType" value="Início"/>
    </properties>
   </object>
@@ -139,7 +140,8 @@
   <object id="16" name="Loteria" x="2151" y="0.5" width="294.5" height="379">
    <properties>
     <property name="customName" value="Banco"/>
-    <property name="customPrice" type="float" value="4e+05"/>
+    <property name="customGain" type="float" value="4e+05"/>
+    <property name="customPrice" type="float" value="0"/>
     <property name="customType" value="Loteria"/>
    </properties>
   </object>
@@ -237,7 +239,8 @@
   <object id="31" name="Tigrinho" x="3628" y="2150" width="293.5" height="377.5">
    <properties>
     <property name="customName" value="Tigrinho"/>
-    <property name="customPrice" type="float" value="2e+05"/>
+    <property name="customPrice" type="float" value="0"/>
+    <property name="customGain" type="float" value="2e+05"/>
     <property name="customType" value="Cassino"/>
    </properties>
   </object>
