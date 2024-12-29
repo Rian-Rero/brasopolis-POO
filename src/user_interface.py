@@ -148,6 +148,7 @@ class UserInterface:
         player_interact = next((i for i in interact if i.custom_name == "Player"), None)
         saldo_interact = next((i for i in interact if i.custom_name == "Saldo"), None)
         cidade_interact = next((i for i in interact if i.custom_name == "Cidade"), None)
+        carta_interact = next((i for i in interact if i.custom_name == "Carta"), None)
         proprietario_interact = next(
             (i for i in interact if i.custom_name == "Proprietario"), None
         )
@@ -176,7 +177,13 @@ class UserInterface:
         image_map = self.get_image_map()
         image = image_map.get(current_piece.current_house.custom_name)
         if image:
-            screen.blit(image, (1780, 350))
+            screen.blit(
+                image,
+                (
+                    (carta_interact.x * zoom + offset[0]),
+                    (carta_interact.y * zoom + offset[1]),
+                ),
+            )
 
         self.draw_text(
             f"{current_piece.current_house.custom_name}",
