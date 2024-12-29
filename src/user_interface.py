@@ -1,5 +1,5 @@
 import pygame
-from constants import BLACK
+from constants import *
 
 
 class UserInterface:
@@ -139,12 +139,21 @@ class UserInterface:
         # A posição será diretamente nas coordenadas (x, y)
         self.screen.blit(text_surface, (x, y))
 
-    def draw_interface(self, screen, current_player, pieces, interact, zoom, offset):
+    def draw_interface(
+        self, screen, current_player, current_piece, interact, zoom, offset
+    ):
         """Exibe informações sobre o jogador atual e outras estatísticas do jogo."""
+        # Atualizar a lógica para o jogador atual corretamente
         screen_width = screen.get_width()
         player_interact = next((i for i in interact if i.custom_name == "Player"), None)
         saldo_interact = next((i for i in interact if i.custom_name == "Saldo"), None)
-
+        cidade_interact = next((i for i in interact if i.custom_name == "Cidade"), None)
+        proprietario_interact = next(
+            (i for i in interact if i.custom_name == "Proprietario"), None
+        )
+        aluguel_interact = next(
+            (i for i in interact if i.custom_name == "Aluguel"), None
+        )
         # Nome do jogador atual
         self.draw_text(
             f"{current_player.name}",
@@ -154,7 +163,7 @@ class UserInterface:
             color=(BLACK),
         )
 
-        # Exemplo: Mostrar saldo do jogador
+        # Mostrar saldo do jogador atual
         self.draw_text(
             f"{current_player.money:.2f}",
             (saldo_interact.x * zoom + offset[0]) * 1.25,
@@ -163,16 +172,76 @@ class UserInterface:
             color=(BLACK),
         )
 
-        def is_user_registered(self, username):
-            """Verifica se o usuário já está registrado no arquivo."""
-            try:
-                with open(self.users_file, "r") as file:
-                    users = file.readlines()
-                return username in (user.strip() for user in users)
-            except FileNotFoundError:
-                return False
+        # Imagem do jogador atual
+        image_map = self.get_image_map()
+        image = image_map.get(current_piece.current_house.custom_name)
+        if image:
+            screen.blit(image, (1780, 350))
 
-        def register_user(self, username):
-            """Registra um novo usuário no arquivo."""
-            with open(self.users_file, "a") as file:
-                file.write(f"{username}\n")
+        self.draw_text(
+            f"{current_piece.current_house.custom_name}",
+            (cidade_interact.x * zoom + offset[0]) * 1.1,
+            (cidade_interact.y * zoom + offset[1]) * 1.02,
+            font=self.small_font,
+            color=(BLACK),
+        )
+
+        self.draw_text(
+            f"{current_piece.current_house.custom_price:.2f}",
+            (aluguel_interact.x * zoom + offset[0]) * 1.08,
+            (aluguel_interact.y * zoom + offset[1]) * 1.02,
+            font=self.small_font,
+            color=(BLACK),
+        )
+
+    # Método auxiliar para carregar imagens
+    def load_image(self, filename, size=None):
+        """
+        Carrega uma imagem do diretório src/assets/tiles e redimensiona, se necessário.
+
+        :param filename: Nome do arquivo da imagem.
+        :param size: Tupla (largura, altura) para redimensionar a imagem. Se None, mantém o tamanho original.
+        :return: Objeto Surface da imagem carregada ou None em caso de erro.
+        """
+        path = f"src/assets/tiles/{filename}"  # Caminho completo para o arquivo
+        try:
+            image = pygame.image.load(
+                path
+            ).convert_alpha()  # Carregar imagem com transparência
+            if size:  # Redimensionar a imagem, se necessário
+                image = pygame.transform.scale(image, size)
+            return image
+        except pygame.error as e:
+            print(f"Erro ao carregar a imagem {path}: {e}")
+            return None
+
+    # Método para criar o mapeamento de nomes para imagens
+    def get_image_map(self, size=(500, 550)):
+        """
+        Cria um dicionário que mapeia nomes personalizados para imagens redimensionadas.
+
+        :param size: Tupla (largura, altura) para redimensionar as imagens.
+        :return: Dicionário mapeando nomes para imagens.
+        """
+        custom_names = CUSTOM_NAMES
+        image_filenames = IMAGE_FILENAMES
+
+        image_map = {
+            custom_name: self.load_image(filename, size=size)
+            for custom_name, filename in zip(custom_names, image_filenames)
+        }
+        return image_map
+
+    def is_user_registered(self, username):
+        """Verifica se o usuário já está registrado no arquivo."""
+        try:
+            with open(self.users_file, "r") as file:
+                users = file.readlines()
+            return username in (user.strip() for user in users)
+        except FileNotFoundError:
+            return False
+
+    def register_user(self, username):
+        """Registra um novo usuário no arquivo."""
+        with open(self.users_file, "a") as file:
+            file.write(f"{username}\n")

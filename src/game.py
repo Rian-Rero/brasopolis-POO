@@ -91,7 +91,7 @@ class Brasopolis:
             self.ui.draw_interface(
                 self.screen,
                 self.players[self.current_player],
-                self.pieces[self.current_player],
+                self.pieces[self.current_player - 1],
                 self.board.interact,
                 self.board.zoom,
                 (map_rect.left, map_rect.top),

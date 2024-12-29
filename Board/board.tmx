@@ -96,7 +96,7 @@
   </object>
   <object id="9" name="São Paulo - SP" x="378.5" y="1" width="294" height="378.5">
    <properties>
-    <property name="customName" value="São Paulo"/>
+    <property name="customName" value="São Paulo - SP"/>
     <property name="customPrice" type="float" value="950000"/>
     <property name="customType" value="Cidade"/>
    </properties>
