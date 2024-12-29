@@ -1,6 +1,7 @@
 import pygame
 from pytmx.util_pygame import load_pygame
 from house import House
+from interact import Interact
 
 
 class Board:
@@ -10,6 +11,7 @@ class Board:
         self.tmx_data = None
         self.map_surface = None
         self.houses = []
+        self.interact = []
         self.zoom = 0.6
         self.min_zoom = 0.2
         self.max_zoom = 2.0
@@ -32,8 +34,9 @@ class Board:
                             (x * self.tmx_data.tilewidth, y * self.tmx_data.tileheight),
                         )
 
-        # Criar objetos House
+        # Criar objetos House e filtrar objetos interact
         self.houses = []
+        self.interact = []
         for obj in self.tmx_data.objects:
             house = House(
                 name=obj.name,
@@ -46,6 +49,10 @@ class Board:
                 height=obj.height,
             )
             self.houses.append(house)
+
+            # Adicionar objetos com customType "Texto" ou "Botao" em interact
+            if house.custom_type in ["Texto", "Botao"]:
+                self.interact.append(house)
 
     # def load_houses(self):
     #     """Carrega as casas da camada de objetos."""

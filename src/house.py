@@ -11,7 +11,11 @@ class House:
         self.custom_name = custom_name
         self.custom_type = custom_type
         self.custom_price = custom_price
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
         self.rect = pygame.Rect(x, y, width, height)
 
     def __repr__(self):
-        return f"House(name={self.name}, properties={self.properties})"
+        return f"House(name={self.name}"

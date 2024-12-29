@@ -131,26 +131,36 @@ class UserInterface:
         text_rect = text_surface.get_rect(center=(x, y))
         self.screen.blit(text_surface, text_rect)
 
-    def draw_interface(self, screen, current_player):
+    def draw_text_simple(self, text, x, y, font=None, color=(BLACK)):
+        """Desenha texto na tela nas coordenadas fornecidas."""
+        if font is None:
+            font = self.font
+        text_surface = font.render(text, True, color)
+        # A posição será diretamente nas coordenadas (x, y)
+        self.screen.blit(text_surface, (x, y))
+
+    def draw_interface(self, screen, current_player, pieces, interact, zoom, offset):
         """Exibe informações sobre o jogador atual e outras estatísticas do jogo."""
         screen_width = screen.get_width()
+        player_interact = next((i for i in interact if i.custom_name == "Player"), None)
+        saldo_interact = next((i for i in interact if i.custom_name == "Saldo"), None)
 
         # Nome do jogador atual
         self.draw_text(
-            f"Jogador atual: {current_player.name}",
-            screen_width // 2,
-            30,
+            f"{current_player.name}",
+            (player_interact.x * zoom + offset[0]) * 1.45,
+            (player_interact.y * zoom + offset[1]) * 1.05,
             font=self.small_font,
-            color=(255, 255, 255),
+            color=(BLACK),
         )
 
         # Exemplo: Mostrar saldo do jogador
         self.draw_text(
-            f"Saldo: R$ {current_player.money:.2f}",
-            screen_width // 2,
-            60,
+            f"{current_player.money:.2f}",
+            (saldo_interact.x * zoom + offset[0]) * 1.25,
+            (saldo_interact.y * zoom + offset[1]) * 1.03,
             font=self.small_font,
-            color=(255, 255, 255),
+            color=(BLACK),
         )
 
         def is_user_registered(self, username):

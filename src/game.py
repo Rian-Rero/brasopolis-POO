@@ -82,7 +82,14 @@ class Brasopolis:
             for piece in self.pieces:
                 piece.draw(self.screen, self.board.zoom, (map_rect.left, map_rect.top))
 
-            self.ui.draw_interface(self.screen, self.players[self.current_player])
+            self.ui.draw_interface(
+                self.screen,
+                self.players[self.current_player],
+                self.pieces[self.current_player],
+                self.board.interact,
+                self.board.zoom,
+                (map_rect.left, map_rect.top),
+            )
 
             pygame.display.flip()
             self.clock.tick(60)
