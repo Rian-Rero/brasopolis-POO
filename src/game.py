@@ -18,7 +18,7 @@ class Brasopolis:
         self.players = []
         self.pieces = []
         self.current_player = 0
-        self.dice = Dice((300, 600))
+        self.dice = Dice((260, 360))
 
     def run(self):
         player_count = self.ui.show_player_count_selection()

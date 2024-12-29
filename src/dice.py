@@ -4,7 +4,7 @@ from constants import *
 
 
 class Dice:
-    def __init__(self, position, size=(100, 50)):
+    def __init__(self, position, size=(110, 55)):
         """
         Inicializa o dado com uma posição e tamanho para o botão.
         :param position: Tupla (x, y) indicando a posição do botão na tela.
@@ -28,21 +28,20 @@ class Dice:
         :param screen: Superfície do Pygame onde o botão será desenhado.
         """
         # Desenhar o botão
-        pygame.draw.rect(screen, (200, 200, 200), self.button_rect)  # Retângulo cinza
-        pygame.draw.rect(screen, (BLACK), self.button_rect, 2)  # Borda preta
+        pygame.draw.rect(
+            screen, (BUTTON_GREEN), self.button_rect, border_radius=15
+        )  # Retângulo Verde
 
-        # Desenhar o texto "Girar"
+        # Desenhar o texto "JOGAR"
         font = pygame.font.Font(None, 36)
-        text = font.render("Girar", True, (BLACK))
+        text = font.render("JOGAR", True, (WHITE))
         text_rect = text.get_rect(center=self.button_rect.center)
         screen.blit(text, text_rect)
 
         # Mostrar o resultado do dado, se existir
         if self.result is not None:
-            result_text = font.render(f"Dado: {self.result}", True, (BLACK))
-            result_text_rect = result_text.get_rect(
-                center=(self.position[0] + 50, self.position[1] - 30)
-            )
+            result_text = font.render(f"{self.result}", True, (BLACK))
+            result_text_rect = result_text.get_rect(topleft=(404, 377))
             screen.blit(result_text, result_text_rect)
 
     def handle_event(self, event):
