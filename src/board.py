@@ -58,21 +58,6 @@ class Board:
             else:
                 self.houses.append(house)
 
-    # def load_houses(self):
-    #     """Carrega as casas da camada de objetos."""
-    #     for obj in self.tmx_data.objects:
-    #         print(self.tmx_data.objects)
-    #         if obj.type == "House":
-    #             house = House(
-    #                 name=obj.name,
-    #                 x=obj.x,
-    #                 y=obj.y,
-    #                 width=obj.width,
-    #                 height=obj.height,
-    #                 properties=obj.properties,
-    #             )
-    #             self.houses.append(house)
-
     def showHouses(self):
         for house in self.houses:
             print(house)
