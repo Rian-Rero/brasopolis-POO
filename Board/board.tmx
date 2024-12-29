@@ -209,7 +209,7 @@
   <object id="27" name="Canutama - AM" x="3920.5" y="1263" width="366" height="296.5">
    <properties>
     <property name="customName" value="Canutama - AM"/>
-    <property name="customPrice" value="230000"/>
+    <property name="customPrice" type="float" value="230000"/>
     <property name="customType" value="Cidade"/>
    </properties>
   </object>
@@ -231,6 +231,7 @@
    <properties>
     <property name="customName" value="UFMG"/>
     <property name="customType" value="Faculdade"/>
+    <property name="customPrice" type="float" value="0"/>
    </properties>
   </object>
   <object id="31" name="Tigrinho" x="3628" y="2150" width="293.5" height="377.5">
@@ -264,7 +265,7 @@
   <object id="35" name="Goiânia - GO" x="2445.5" y="2150" width="295" height="377.5">
    <properties>
     <property name="customName" value="Goiânia - GO"/>
-    <property name="customPrice" value="480000"/>
+    <property name="customPrice" type="float" value="480000"/>
     <property name="customType" value="Cidade"/>
    </properties>
   </object>
@@ -321,6 +322,7 @@
    <properties>
     <property name="customName" value="Férias"/>
     <property name="customType" value="Ferias"/>
+    <property name="customPrice" type="float" value="0"/>
    </properties>
   </object>
   <object id="45" name="Tuntum - MA" x="-0.5" y="1855" width="379.5" height="292.5">
