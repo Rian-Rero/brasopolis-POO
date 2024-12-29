@@ -22,12 +22,20 @@ class Dice:
         self.result = random.randint(1, 6)
         return self.result
 
-    def draw(self, screen):
+    def draw(self, screen, interact, zoom, offset):
         """
         Desenha o botão do dado na tela.
         :param screen: Superfície do Pygame onde o botão será desenhado.
         """
         # Desenhar o botão
+        dice_interact = next((i for i in interact if i.custom_name == "Dado"), None)
+        jogar_interact = next((i for i in interact if i.custom_name == "Jogar"), None)
+        self.button_rect = pygame.Rect(
+            (jogar_interact.x * zoom + offset[0]),
+            (jogar_interact.y * zoom + offset[1]),
+            jogar_interact.width * zoom,
+            jogar_interact.height * zoom,
+        )
         pygame.draw.rect(
             screen, (BUTTON_GREEN), self.button_rect, border_radius=15
         )  # Retângulo Verde
@@ -41,7 +49,12 @@ class Dice:
         # Mostrar o resultado do dado, se existir
         if self.result is not None:
             result_text = font.render(f"{self.result}", True, (BLACK))
-            result_text_rect = result_text.get_rect(topleft=(404, 377))
+            result_text_rect = result_text.get_rect(
+                topleft=(
+                    (dice_interact.x * zoom + offset[0]) * 1.04,
+                    (dice_interact.y * zoom + offset[1]) * 1.02,
+                )
+            )
             screen.blit(result_text, result_text_rect)
 
     def handle_event(self, event):

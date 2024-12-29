@@ -77,10 +77,18 @@ class Brasopolis:
                     if event.key == pygame.K_l:  # Pressionar 'L' para fechar o jogo
                         self.running = False
 
+            map_rect = self.board.get_scaled_map().get_rect(
+                center=(self.screen.get_width() // 2, self.screen.get_height() // 2)
+            )
             # Desenhar elementos na tela
             self.screen.fill((0, 0, 0))
             self.board.draw(self.screen)
-            self.dice.draw(self.screen)  # Desenha o botão do dado
+            self.dice.draw(
+                self.screen,
+                self.board.interact,
+                self.board.zoom,
+                (map_rect.left, map_rect.top),
+            )  # Desenha o botão do dado
 
             map_rect = self.board.get_scaled_map().get_rect(
                 center=(self.screen.get_width() // 2, self.screen.get_height() // 2)
