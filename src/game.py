@@ -56,11 +56,11 @@ class Brasopolis:
                 # Tratar eventos do tabuleiro (zoom, etc.)
                 self.board.handle_event(event)
 
-                # Tratar movimentação da peça do jogador atual
+                # Tratar eventos de teclado
                 if event.type == pygame.KEYDOWN:
-                    if (
-                        event.key == pygame.K_RIGHT
-                    ):  # Exemplo: mover para a próxima casa
+                    if event.key == pygame.K_l:  # Pressionar 'L' para fechar o jogo
+                        self.running = False
+                    elif event.key == pygame.K_RIGHT:  # Mover para a próxima casa
                         current_piece = self.pieces[self.current_player]
                         current_index = self.board.houses.index(
                             current_piece.current_house
