@@ -38,21 +38,23 @@ class Board:
         self.houses = []
         self.interact = []
         for obj in self.tmx_data.objects:
+            custom_type = obj.properties.get("customType", "Sem Tipo")
             house = House(
                 name=obj.name,
                 custom_name=obj.properties.get("customName", "Sem Nome"),
-                custom_type=obj.properties.get("customType", "Sem Tipo"),
+                custom_type=custom_type,
                 custom_price=obj.properties.get("customPrice", 0),
                 x=obj.x,
                 y=obj.y,
                 width=obj.width,
                 height=obj.height,
             )
-            self.houses.append(house)
 
             # Adicionar objetos com customType "Texto" ou "Botao" em interact
-            if house.custom_type in ["Texto", "Botao"]:
+            if custom_type in ["Texto", "Botao"]:
                 self.interact.append(house)
+            else:
+                self.houses.append(house)
 
     # def load_houses(self):
     #     """Carrega as casas da camada de objetos."""
