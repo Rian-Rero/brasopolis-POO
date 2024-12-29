@@ -8,5 +8,5 @@ class Dice:
 def main():
     dado=Dice()
     resultado=dado.roll()
-    print("Resultado do lançamento dos dados:", resultado)
+    print(resultado)
 main()
