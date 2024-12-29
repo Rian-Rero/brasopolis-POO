@@ -174,7 +174,9 @@ class UserInterface:
         )
 
         # Imagem do jogador atual
-        image_map = self.get_image_map()
+        image_map = self.get_image_map(
+            (carta_interact.width * zoom, carta_interact.height * zoom)
+        )
         image = image_map.get(current_piece.current_house.custom_name)
         if image:
             screen.blit(
@@ -223,7 +225,7 @@ class UserInterface:
             return None
 
     # Método para criar o mapeamento de nomes para imagens
-    def get_image_map(self, size=(500, 550)):
+    def get_image_map(self, size):
         """
         Cria um dicionário que mapeia nomes personalizados para imagens redimensionadas.
 
