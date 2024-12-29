@@ -41,7 +41,8 @@ class Dice:
         )  # Retângulo Verde
 
         # Desenhar o texto "JOGAR"
-        font = pygame.font.Font(None, 36)
+        font_size = round(55 * zoom)
+        font = pygame.font.Font(None, font_size)
         text = font.render("JOGAR", True, (WHITE))
         text_rect = text.get_rect(center=self.button_rect.center)
         screen.blit(text, text_rect)
