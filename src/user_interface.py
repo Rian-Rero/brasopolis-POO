@@ -19,6 +19,7 @@ class UserInterface:
                 "Selecione o número de jogadores (2 a 4):",
                 self.screen.get_width() // 2,
                 100,
+                color=(WHITE)
             )
 
             # Botões para 2, 3 ou 4 jogadores
@@ -55,7 +56,7 @@ class UserInterface:
                     rect.centerx,
                     rect.centery,
                     font=self.small_font,
-                    color=(255, 255, 255),
+                    color=(255, 255, 255)
                 )
 
             pygame.display.flip()
@@ -81,24 +82,37 @@ class UserInterface:
             while running:
                 self.screen.fill((45, 86, 80))
                 self.draw_text(
-                    f"Jogador {i}: Digite seu nome:", self.screen.get_width() // 2, 100
+                    f"Jogador {i}: Digite seu nome:", self.screen.get_width() // 2, 100, color=(WHITE)
                 )
 
                 # Campo de texto
-                input_box = pygame.Rect(300, 200, 400, 50)
+                input_box_width, input_box_height = 400, 50
+                input_box = pygame.Rect(
+                    (self.screen.get_width() - input_box_width) // 2,
+                    (self.screen.get_height() - input_box_height) // 3,
+                    input_box_width,
+                    input_box_height
+                )
                 pygame.draw.rect(self.screen, (255, 255, 255), input_box)
                 self.draw_text(
-                    username, input_box.x + 10, input_box.y + 10, font=self.small_font
+                    username, input_box.x + 200, input_box.y + 25, font=self.small_font
                 )
 
                 # Botão de confirmar
-                confirm_button = pygame.Rect(350, 300, 200, 50)
+                confirm_button_width, confirm_button_height = 200, 50
+                confirm_button = pygame.Rect(
+                    (self.screen.get_width() - confirm_button_width) // 2,
+                    input_box.bottom + 20,
+                    confirm_button_width,
+                    confirm_button_height
+                )
                 pygame.draw.rect(self.screen, (111, 185, 174), confirm_button)
                 self.draw_text(
                     "Confirmar",
                     confirm_button.centerx,
                     confirm_button.centery,
                     font=self.small_font,
+                    color=(255, 255, 255)
                 )
 
                 pygame.display.flip()
