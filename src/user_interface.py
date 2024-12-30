@@ -123,6 +123,55 @@ class UserInterface:
 
         return players
 
+    def prompt_buy_or_rent(self, house):
+        """Exibe uma janela perguntando ao jogador se deseja comprar ou alugar a casa."""
+        running = True
+        font = pygame.font.Font(None, 36)
+        clock = pygame.time.Clock()
+
+        while running:
+            self.screen.fill((45, 86, 80))  # Fundo da janela
+            self.draw_text(
+                f"A casa '{house.custom_name}' custa R${house.custom_price}.",
+                self.screen.get_width() // 2,
+                100,
+                font=font,
+                color=(255, 255, 255),
+            )
+
+            # Botões
+            button_width, button_height = 200, 50
+            buy_button = pygame.Rect(150, 200, button_width, button_height)
+            rent_button = pygame.Rect(400, 200, button_width, button_height)
+            skip_button = pygame.Rect(650, 200, button_width, button_height)
+
+            # Desenhar botões
+            pygame.draw.rect(self.screen, (111, 185, 174), buy_button)
+            pygame.draw.rect(self.screen, (185, 111, 174), rent_button)
+            pygame.draw.rect(self.screen, (174, 185, 111), skip_button)
+
+            self.draw_text("Comprar", buy_button.centerx, buy_button.centery, font=font)
+            self.draw_text(
+                "Alugar", rent_button.centerx, rent_button.centery, font=font
+            )
+            self.draw_text("Pular", skip_button.centerx, skip_button.centery, font=font)
+
+            pygame.display.flip()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if buy_button.collidepoint(event.pos):
+                        return "comprar"
+                    elif rent_button.collidepoint(event.pos):
+                        return "alugar"
+                    elif skip_button.collidepoint(event.pos):
+                        return "nenhuma"
+
+            clock.tick(30)
+
     def draw_text(self, text, x, y, font=None, color=(BLACK)):
         """Desenha texto na tela."""
         if font is None:
