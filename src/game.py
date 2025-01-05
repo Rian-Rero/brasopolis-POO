@@ -95,6 +95,9 @@ class Brasopolis:
         next_index = (current_index + dice_value) % len(self.board.houses)
         current_house = self.board.houses[next_index]
         current_piece.move_to(current_house)
+        map_rect = self.board.get_scaled_map().get_rect(
+            center=(self.screen.get_width() // 2, self.screen.get_height() // 2)
+        )
 
         # Regras para casas especiais
         if next_index in [7, 21]:  # Recebe dinheiro
@@ -121,7 +124,12 @@ class Brasopolis:
             self.players[self.current_player].money -= rent
             current_house.owner.money += rent
         elif current_house.status == "disponível":
-            action = self.ui.prompt_buy_or_rent(current_house)
+            action = self.ui.prompt_buy_or_rent(
+                current_house,
+                self.board.interact,
+                self.board.zoom,
+                (map_rect.left, map_rect.top),
+            )
             if action == "comprar":
                 current_house.owner = self.players[self.current_player]
                 current_house.status = "comprada"

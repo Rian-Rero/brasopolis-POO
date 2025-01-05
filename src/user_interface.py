@@ -19,7 +19,7 @@ class UserInterface:
                 "Selecione o número de jogadores (2 a 4):",
                 self.screen.get_width() // 2,
                 100,
-                color=(WHITE)
+                color=(WHITE),
             )
 
             # Botões para 2, 3 ou 4 jogadores
@@ -56,7 +56,7 @@ class UserInterface:
                     rect.centerx,
                     rect.centery,
                     font=self.small_font,
-                    color=(255, 255, 255)
+                    color=(255, 255, 255),
                 )
 
             pygame.display.flip()
@@ -82,7 +82,10 @@ class UserInterface:
             while running:
                 self.screen.fill((45, 86, 80))
                 self.draw_text(
-                    f"Jogador {i}: Digite seu nome:", self.screen.get_width() // 2, 100, color=(WHITE)
+                    f"Jogador {i}: Digite seu nome:",
+                    self.screen.get_width() // 2,
+                    100,
+                    color=(WHITE),
                 )
 
                 # Campo de texto
@@ -91,7 +94,7 @@ class UserInterface:
                     (self.screen.get_width() - input_box_width) // 2,
                     (self.screen.get_height() - input_box_height) // 3,
                     input_box_width,
-                    input_box_height
+                    input_box_height,
                 )
                 pygame.draw.rect(self.screen, (255, 255, 255), input_box)
                 self.draw_text(
@@ -104,7 +107,7 @@ class UserInterface:
                     (self.screen.get_width() - confirm_button_width) // 2,
                     input_box.bottom + 20,
                     confirm_button_width,
-                    confirm_button_height
+                    confirm_button_height,
                 )
                 pygame.draw.rect(self.screen, (111, 185, 174), confirm_button)
                 self.draw_text(
@@ -112,7 +115,7 @@ class UserInterface:
                     confirm_button.centerx,
                     confirm_button.centery,
                     font=self.small_font,
-                    color=(255, 255, 255)
+                    color=(255, 255, 255),
                 )
 
                 pygame.display.flip()
@@ -137,38 +140,94 @@ class UserInterface:
 
         return players
 
-    def prompt_buy_or_rent(self, house):
+    def prompt_buy_or_rent(self, house, interact, zoom, offset):
         """Exibe uma janela perguntando ao jogador se deseja comprar ou alugar a casa."""
         running = True
         font = pygame.font.Font(None, 36)
         clock = pygame.time.Clock()
 
         while running:
-            self.screen.fill((45, 86, 80))  # Fundo da janela
             self.draw_text(
                 f"A casa '{house.custom_name}' custa R${house.custom_price}.",
                 self.screen.get_width() // 2,
-                100,
+                300,
                 font=font,
-                color=(255, 255, 255),
+                color=(WHITE),
             )
 
             # Botões
-            button_width, button_height = 200, 50
-            buy_button = pygame.Rect(150, 200, button_width, button_height)
-            rent_button = pygame.Rect(400, 200, button_width, button_height)
-            skip_button = pygame.Rect(650, 200, button_width, button_height)
+            buy_button_interact = next(
+                (i for i in interact if i.custom_name == "Comprar"), None
+            )
+            rent_button_interact = next(
+                (i for i in interact if i.custom_name == "AluguelBotao"), None
+            )
+            sell_button_interact = next(
+                (i for i in interact if i.custom_name == "Vender"), None
+            )
+            skip_button_interact = next(
+                (i for i in interact if i.custom_name == "Pular"), None
+            )
+
+            buy_button = pygame.Rect(
+                (buy_button_interact.x * zoom + offset[0]),
+                (buy_button_interact.y * zoom + offset[1]),
+                buy_button_interact.width * zoom,
+                buy_button_interact.height * zoom,
+            )
+            rent_button = pygame.Rect(
+                (rent_button_interact.x * zoom * offset[0]),
+                (rent_button_interact.y * zoom + offset[1]),
+                rent_button_interact.width * zoom,
+                rent_button_interact.height * zoom,
+            )
+            sell_button = pygame.Rect(
+                (sell_button_interact.x * zoom * offset[0]),
+                (sell_button_interact.y * zoom + offset[1]),
+                sell_button_interact.width * zoom,
+                sell_button_interact.height * zoom,
+            )
+            skip_button = pygame.Rect(
+                (skip_button_interact.x * zoom * offset[0]),
+                (skip_button_interact.y * zoom + offset[1]),
+                skip_button_interact.width * zoom,
+                skip_button_interact.height * zoom,
+            )
 
             # Desenhar botões
-            pygame.draw.rect(self.screen, (111, 185, 174), buy_button)
-            pygame.draw.rect(self.screen, (185, 111, 174), rent_button)
-            pygame.draw.rect(self.screen, (174, 185, 111), skip_button)
+            pygame.draw.rect(self.screen, (RENT_BUTTON), rent_button, border_radius=15)
+            pygame.draw.rect(self.screen, (BUY_BUTTON), buy_button, border_radius=15)
+            pygame.draw.rect(self.screen, (SELL_BUTTON), skip_button, border_radius=15)
+            pygame.draw.rect(self.screen, (SELL_BUTTON), sell_button, border_radius=15)
 
-            self.draw_text("Comprar", buy_button.centerx, buy_button.centery, font=font)
             self.draw_text(
-                "Alugar", rent_button.centerx, rent_button.centery, font=font
+                "ComprarButton",
+                buy_button.centerx,
+                buy_button.centery,
+                font=font,
+                color=(WHITE),
             )
-            self.draw_text("Pular", skip_button.centerx, skip_button.centery, font=font)
+            self.draw_text(
+                "AlugarButton",
+                rent_button.centerx,
+                rent_button.centery,
+                font=font,
+                color=(BLACK),
+            )
+            self.draw_text(
+                "PularButton",
+                skip_button.centerx,
+                skip_button.centery,
+                font=font,
+                color=(WHITE),
+            )
+            self.draw_text(
+                "VenderButton",
+                sell_button.centerx,
+                sell_button.centery,
+                font=font,
+                color=(WHITE),
+            )
 
             pygame.display.flip()
 
@@ -183,6 +242,8 @@ class UserInterface:
                         return "alugar"
                     elif skip_button.collidepoint(event.pos):
                         return "nenhuma"
+                    elif sell_button.collidepoint(event.pos):
+                        return "vender"
 
             clock.tick(30)
 
