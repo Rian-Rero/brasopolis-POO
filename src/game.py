@@ -19,6 +19,7 @@ class Brasopolis:
         self.pieces = []
         self.current_player = 0
         self.dice = Dice((260, 360))
+        self.prompt_data = None  # Armazena dados do prompt atual (se houver)
 
     def run(self):
         player_count = self.ui.show_player_count_selection()
@@ -95,59 +96,31 @@ class Brasopolis:
         next_index = (current_index + dice_value) % len(self.board.houses)
         current_house = self.board.houses[next_index]
         current_piece.move_to(current_house)
-        map_rect = self.board.get_scaled_map().get_rect(
-            center=(self.screen.get_width() // 2, self.screen.get_height() // 2)
-        )
 
-        # Regras para casas especiais
-        if next_index in [7, 21]:  # Recebe dinheiro
-            self.players[self.current_player].money += 200000
-        elif next_index == 12:  # Paga multa
-            self.players[self.current_player].money -= 300000
-        elif next_index == 35:
-            self.players[self.current_player].money -= 100000
-        elif next_index == 20 or next_index == 34:  # Perde turnos
-            self.players[self.current_player].turns_lost = 2
-        elif next_index == 13:  # Prisão
-            if not self.ui.prompt_payment_or_dice(
-                self.players[self.current_player], 200000
-            ):
-                return  # Não sai da prisão
-
-        # Regras gerais para propriedades
-        if (
+        # Gerenciar aluguel ou compra
+        if current_house.status == "disponível":
+            self.prompt_data = {
+                "house": current_house,
+                "player": self.players[self.current_player],
+            }
+        elif (
             current_house.is_owned()
             and current_house.owner != self.players[self.current_player]
         ):
-            # Paga aluguel
             rent = current_house.custom_price * 0.05
             self.players[self.current_player].money -= rent
             current_house.owner.money += rent
-        elif current_house.status == "disponível":
-            action = self.ui.prompt_buy_or_rent(
-                current_house,
-                self.board.interact,
-                self.board.zoom,
-                (map_rect.left, map_rect.top),
-            )
-            if action == "comprar":
-                current_house.owner = self.players[self.current_player]
-                current_house.status = "comprada"
-                self.players[self.current_player].money -= current_house.custom_price
-            elif action == "alugar":
-                current_house.owner = self.players[self.current_player]
-                current_house.status = "alugada"
-                current_house.rent_turns_left = 2
 
-        # Gerenciar aluguel expirado
+        # Atualizar status de aluguel expirado
         for house in self.board.houses:
             if house.status == "alugada" and house.rent_turns_left > 0:
                 house.rent_turns_left -= 1
             if house.rent_turns_left == 0:
                 house.reset_rent()
 
-        # Alternar turno
-        self.switch_turn()
+        # Alternar turno se não houver prompt
+        if not self.prompt_data:
+            self.switch_turn()
 
     def initialize_pieces(self):
         """Inicializa as peças dos jogadores no tabuleiro."""
@@ -170,6 +143,9 @@ class Brasopolis:
         self.current_player = (self.current_player + 1) % len(self.players)
 
     def game_loop(self):
+        map_rect = self.board.get_scaled_map().get_rect(
+            center=(self.screen.get_width() // 2, self.screen.get_height() // 2)
+        )
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -177,7 +153,7 @@ class Brasopolis:
 
                 # Verificar clique no botão do dado
                 dice_result = self.dice.handle_event(event)
-                if dice_result:
+                if dice_result and not self.prompt_data:
                     self.move_current_player(dice_result)
 
                 # Tratar eventos do tabuleiro
@@ -188,10 +164,7 @@ class Brasopolis:
                     if event.key == pygame.K_l:  # Pressionar 'L' para fechar o jogo
                         self.running = False
 
-            map_rect = self.board.get_scaled_map().get_rect(
-                center=(self.screen.get_width() // 2, self.screen.get_height() // 2)
-            )
-            # Desenhar elementos na tela
+            # Atualizar e desenhar elementos na tela
             self.screen.fill((0, 0, 0))
             self.board.draw(self.screen)
             self.dice.draw(
@@ -199,7 +172,7 @@ class Brasopolis:
                 self.board.interact,
                 self.board.zoom,
                 (map_rect.left, map_rect.top),
-            )  # Desenha o botão do dado
+            )
 
             for piece in self.pieces:
                 piece.draw(self.screen, self.board.zoom, (map_rect.left, map_rect.top))
@@ -207,11 +180,34 @@ class Brasopolis:
             self.ui.draw_interface(
                 self.screen,
                 self.players[self.current_player],
-                self.pieces[self.current_player - 1],
+                self.pieces[self.current_player],
                 self.board.interact,
                 self.board.zoom,
                 (map_rect.left, map_rect.top),
             )
+
+            # Exibir prompt, se necessário
+            if self.prompt_data:
+                action = self.ui.prompt_buy_or_rent(
+                    self.prompt_data["house"],
+                    self.board.interact,
+                    self.board.zoom,
+                    (map_rect.left, map_rect.top),
+                )
+                if action == "comprar":
+                    self.prompt_data["house"].owner = self.prompt_data["player"]
+                    self.prompt_data["house"].status = "comprada"
+                    self.prompt_data["player"].money -= self.prompt_data[
+                        "house"
+                    ].custom_price
+                elif action == "alugar":
+                    self.prompt_data["house"].owner = self.prompt_data["player"]
+                    self.prompt_data["house"].status = "alugada"
+                    self.prompt_data["house"].rent_turns_left = 2
+
+                # Limpar o estado do prompt e alternar turno
+                self.prompt_data = None
+                self.switch_turn()
 
             pygame.display.flip()
             self.clock.tick(60)
