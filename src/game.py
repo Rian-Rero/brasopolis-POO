@@ -97,6 +97,16 @@ class Brasopolis:
         current_house = self.board.houses[next_index]
         current_piece.move_to(current_house)
 
+        # Regras para casas especiais
+        if next_index in [7, 21]:  # Recebe dinheiro
+            self.players[self.current_player].money += 200000
+        elif next_index == 12:  # Paga multa
+            self.players[self.current_player].money -= 300000
+        elif next_index == 35:
+            self.players[self.current_player].money -= 100000
+        elif next_index == 20 or next_index == 34:  # Perde turnos
+            self.players[self.current_player].turns_lost = 2
+
         # Gerenciar aluguel ou compra
         if current_house.status == "disponível":
             self.prompt_data = {
@@ -143,7 +153,7 @@ class Brasopolis:
         self.current_player = (self.current_player + 1) % len(self.players)
 
     def game_loop(self):
-        
+
         while self.running:
             map_rect = self.board.get_scaled_map().get_rect(
                 center=(self.screen.get_width() // 2, self.screen.get_height() // 2)
