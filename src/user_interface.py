@@ -176,19 +176,19 @@ class UserInterface:
                 buy_button_interact.height * zoom,
             )
             rent_button = pygame.Rect(
-                (rent_button_interact.x * zoom * offset[0]),
+                (rent_button_interact.x * zoom + offset[0]),
                 (rent_button_interact.y * zoom + offset[1]),
                 rent_button_interact.width * zoom,
                 rent_button_interact.height * zoom,
             )
             sell_button = pygame.Rect(
-                (sell_button_interact.x * zoom * offset[0]),
+                (sell_button_interact.x * zoom + offset[0]),
                 (sell_button_interact.y * zoom + offset[1]),
                 sell_button_interact.width * zoom,
                 sell_button_interact.height * zoom,
             )
             skip_button = pygame.Rect(
-                (skip_button_interact.x * zoom * offset[0]),
+                (skip_button_interact.x * zoom + offset[0]),
                 (skip_button_interact.y * zoom + offset[1]),
                 skip_button_interact.width * zoom,
                 skip_button_interact.height * zoom,
@@ -201,28 +201,28 @@ class UserInterface:
             pygame.draw.rect(self.screen, (SELL_BUTTON), sell_button, border_radius=15)
 
             self.draw_text(
-                "ComprarButton",
+                "Comprar",
                 buy_button.centerx,
                 buy_button.centery,
                 font=font,
                 color=(WHITE),
             )
             self.draw_text(
-                "AlugarButton",
+                "Alugar",
                 rent_button.centerx,
                 rent_button.centery,
                 font=font,
                 color=(BLACK),
             )
             self.draw_text(
-                "PularButton",
+                "Pular",
                 skip_button.centerx,
                 skip_button.centery,
                 font=font,
                 color=(WHITE),
             )
             self.draw_text(
-                "VenderButton",
+                "Vender",
                 sell_button.centerx,
                 sell_button.centery,
                 font=font,

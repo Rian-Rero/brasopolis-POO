@@ -201,9 +201,6 @@ class Brasopolis:
                 (map_rect.left, map_rect.top),
             )  # Desenha o botão do dado
 
-            map_rect = self.board.get_scaled_map().get_rect(
-                center=(self.screen.get_width() // 2, self.screen.get_height() // 2)
-            )
             for piece in self.pieces:
                 piece.draw(self.screen, self.board.zoom, (map_rect.left, map_rect.top))
 
