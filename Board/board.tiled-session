@@ -9,11 +9,11 @@
     ],
     "fileStates": {
         "board.tmx": {
-            "scale": 0.75,
+            "scale": 0.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 2734.6666666666665,
-                "y": 983.3333333333333
+                "x": 2018,
+                "y": 549
             }
         },
         "board.tmx#board": {
