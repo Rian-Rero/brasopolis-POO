@@ -143,10 +143,11 @@ class Brasopolis:
         self.current_player = (self.current_player + 1) % len(self.players)
 
     def game_loop(self):
-        map_rect = self.board.get_scaled_map().get_rect(
-            center=(self.screen.get_width() // 2, self.screen.get_height() // 2)
-        )
+        
         while self.running:
+            map_rect = self.board.get_scaled_map().get_rect(
+                center=(self.screen.get_width() // 2, self.screen.get_height() // 2)
+            )
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
@@ -173,7 +174,9 @@ class Brasopolis:
                 self.board.zoom,
                 (map_rect.left, map_rect.top),
             )
-
+            map_rect = self.board.get_scaled_map().get_rect(
+                center=(self.screen.get_width() // 2, self.screen.get_height() // 2)
+            )
             for piece in self.pieces:
                 piece.draw(self.screen, self.board.zoom, (map_rect.left, map_rect.top))
 
