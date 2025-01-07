@@ -4,6 +4,8 @@ from user_interface import UserInterface
 from piece import Piece
 from player import Player
 from dice import Dice
+from DataBase.database import Database
+
 
 
 class Brasopolis:
@@ -20,6 +22,7 @@ class Brasopolis:
         self.current_player = 0
         self.dice = Dice((260, 360))
         self.prompt_data = None  # Armazena dados do prompt atual (se houver)
+        self.database = Database()
 
     def run(self):
         player_count = self.ui.show_player_count_selection()
@@ -28,6 +31,11 @@ class Brasopolis:
         self.board.load_map()
         self.initialize_pieces()
         self.game_loop()
+
+    def save_records(self):
+        for player in self.players:
+            self.database.insert_record(player.name, player.money)
+        self.database.close()
 
     def handle_house_event(self, player, house):
         """Gerencia os eventos ao cair em uma casa."""
@@ -41,6 +49,8 @@ class Brasopolis:
                     house.owner = player
                     house.status = "vendido"
                     self.ui.show_message(f"{player.name} comprou {house.name}.")
+                else:
+                    self.ui.show_message("Dinheiro insuficiente para a compra.")   
             elif choice == "alugar":
                 if player.money >= house.custom_price * 0.2:  # 20% do preço para alugar
                     player.money -= house.custom_price * 0.2
@@ -212,7 +222,7 @@ class Brasopolis:
                     self.prompt_data["house"].status = "comprada"
                     self.prompt_data["player"].money -= self.prompt_data[
                         "house"
-                    ].custom_price
+                        ].custom_price
                 elif action == "alugar":
                     self.prompt_data["house"].owner = self.prompt_data["player"]
                     self.prompt_data["house"].status = "alugada"

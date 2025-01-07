@@ -8,6 +8,7 @@ class UserInterface:
         self.font = pygame.font.Font(None, 50)
         self.small_font = pygame.font.Font(None, 35)
         self.users_file = "src/DataBase/users.txt"
+        
 
     def show_player_count_selection(self):
         """Exibe uma tela para o jogador selecionar a quantidade de jogadores."""
@@ -143,18 +144,23 @@ class UserInterface:
     def prompt_buy_or_rent(self, house, interact, zoom, offset):
         """Exibe uma janela perguntando ao jogador se deseja comprar ou alugar a casa."""
         running = True
-        font = pygame.font.Font(None, 36)
+        font_size = round(85*zoom)
+        font = pygame.font.Font(None, font_size)
         clock = pygame.time.Clock()
+        
 
         while running:
+            acao_button_interact = next(
+                (i for i in interact if i.custom_name == "Acao"), None
+            )
+            print(f"{acao_button_interact.x * zoom + offset[0]}")
             self.draw_text(
                 f"A casa '{house.custom_name}' custa R${house.custom_price}.",
-                self.screen.get_width() // 2,
-                300,
+                (acao_button_interact.x * zoom + offset[0]) * 1.30,
+                (acao_button_interact.y * zoom + offset[1])* 1.1,
                 font=font,
-                color=(WHITE),
+                color=(BLACK),
             )
-
             # Botões
             buy_button_interact = next(
                 (i for i in interact if i.custom_name == "Comprar"), None
@@ -310,7 +316,6 @@ class UserInterface:
                     (carta_interact.y * zoom + offset[1]),
                 ),
             )
-
         self.draw_text(
             f"{current_piece.current_house.custom_name}",
             (cidade_interact.x * zoom + offset[0]) * 1.1,
