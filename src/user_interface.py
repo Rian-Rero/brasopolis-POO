@@ -7,6 +7,7 @@ class UserInterface:
         self.screen = screen
         self.font = pygame.font.Font(None, 50)
         self.small_font = pygame.font.Font(None, 35)
+        self.custom_font = pygame.font.Font(None, 30)
         self.users_file = "src/DataBase/users.txt"
         
 
@@ -153,12 +154,12 @@ class UserInterface:
             acao_button_interact = next(
                 (i for i in interact if i.custom_name == "Acao"), None
             )
-            print(f"{acao_button_interact.x * zoom + offset[0]}")
+            #print(f"{acao_button_interact.x * zoom + offset[0]}")
             self.draw_text(
                 f"A casa '{house.custom_name}' custa R${house.custom_price}.",
                 (acao_button_interact.x * zoom + offset[0]) * 1.30,
                 (acao_button_interact.y * zoom + offset[1])* 1.1,
-                font=font,
+                font=self.custom_font,
                 color=(BLACK),
             )
             # Botões
@@ -293,7 +294,6 @@ class UserInterface:
             font=self.small_font,
             color=(BLACK),
         )
-
         # Mostrar saldo do jogador atual
         self.draw_text(
             f"{current_player.money:.2f}",
