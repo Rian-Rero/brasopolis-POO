@@ -1,7 +1,25 @@
 import pygame
+from abc import ABC, abstractmethod
 
+class AbstractHouse(ABC):
+    """Classe abstrata para representar elementos no tabuleiro."""
 
-class House:
+    def __init__(self, name, custom_name, custom_type, x, y, width, height):
+        self.name = name
+        self.custom_name = custom_name
+        self.custom_type = custom_type
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.rect = pygame.Rect(x, y, width, height)
+
+    @abstractmethod
+    def is_available(self):
+        """Verifica se o elemento está disponível para interação."""
+        pass
+
+class House(AbstractHouse):
     """Representa uma casa no tabuleiro."""
 
     def __init__(
@@ -17,17 +35,10 @@ class House:
         width,
         height,
     ):
-        self.name = name
-        self.custom_name = custom_name
-        self.custom_type = custom_type
+        super().__init__(name, custom_name, custom_type, x, y, width, height)
         self.custom_price = custom_price
         self.custom_gain = custom_gain
         self.custom_loss = custom_loss
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.rect = pygame.Rect(x, y, width, height)
         self.owner = None
         self.status = "disponível"
         self.rent_turns_left = 0

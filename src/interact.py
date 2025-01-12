@@ -1,15 +1,11 @@
 import pygame
-
-
-class Interact:
+from house import AbstractHouse
+class Interact(AbstractHouse):
     """Representa uma Interação no tabuleiro."""
 
     def __init__(self, name, custom_name, custom_type, x, y, width, height):
-        self.name = name
-        self.custom_name = custom_name
-        self.custom_type = custom_type
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.rect = pygame.Rect(x, y, width, height)
+        super().__init__(name, custom_name, custom_type, x, y, width, height)
+
+    def is_available(self):
+        """Implementação padrão para interações."""
+        return True
