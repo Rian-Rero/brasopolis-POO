@@ -1,17 +1,17 @@
 import pygame
 from constants import *
-
+from typing import List, Tuple, Optional, Dict, Any
 
 class UserInterface:
-    def __init__(self, screen):
-        self.screen = screen
-        self.font = pygame.font.Font(None, 50)
-        self.small_font = pygame.font.Font(None, 35)
-        self.custom_font = pygame.font.Font(None, 30)
-        self.users_file = "src/DataBase/users.txt"
+    def __init__(self, screen: pygame.Surface) -> None:
+        self.screen: pygame.Surface = screen
+        self.font: pygame.font.Font = pygame.font.Font(None, 50)
+        self.small_font: pygame.font.Font = pygame.font.Font(None, 35)
+        self.custom_font: pygame.font.Font = pygame.font.Font(None, 30)
+        self.users_file: str = "src/DataBase/users.txt"
         
 
-    def show_player_count_selection(self):
+    def show_player_count_selection(self) -> int:
         """Exibe uma tela para o jogador selecionar a quantidade de jogadores."""
         running = True
         selected_count = None
@@ -75,7 +75,7 @@ class UserInterface:
 
         return selected_count
 
-    def show_login_screen(self, player_count):
+    def show_login_screen(self, player_count: int) -> List[str]:
         """Exibe a tela de login/cadastro para o número de jogadores."""
         players = []
         for i in range(1, player_count + 1):
@@ -142,7 +142,7 @@ class UserInterface:
 
         return players
 
-    def prompt_buy_or_rent(self, house, interact, zoom, offset):
+    def prompt_buy_or_rent(self, house: Any, interact: List[Any], zoom: float, offset: Tuple[int, int]) -> str:
         """Exibe uma janela perguntando ao jogador se deseja comprar ou alugar a casa."""
         running = True
         font_size = round(85*zoom)
@@ -254,7 +254,7 @@ class UserInterface:
 
             clock.tick(30)
 
-    def draw_text(self, text, x, y, font=None, color=(BLACK)):
+    def draw_text(self, text: str, x: int, y: int, font: Optional[pygame.font.Font] = None, color: Tuple[int, int, int] = BLACK) -> None:
         """Desenha texto na tela."""
         if font is None:
             font = self.font
@@ -262,7 +262,7 @@ class UserInterface:
         text_rect = text_surface.get_rect(center=(x, y))
         self.screen.blit(text_surface, text_rect)
 
-    def draw_text_simple(self, text, x, y, font=None, color=(BLACK)):
+    def draw_text_simple(self, text: str, x: int, y: int, font: Optional[pygame.font.Font] = None, color: Tuple[int, int, int] = BLACK) -> None:
         """Desenha texto na tela nas coordenadas fornecidas."""
         if font is None:
             font = self.font
@@ -271,8 +271,8 @@ class UserInterface:
         self.screen.blit(text_surface, (x, y))
 
     def draw_interface(
-        self, screen, current_player, current_piece, interact, zoom, offset
-    ):
+        self, screen: pygame.Surface, current_player: Any, current_piece: Any, interact: List[Any], zoom: float, offset: Tuple[int, int]
+    ) -> None:
         """Exibe informações sobre o jogador atual e outras estatísticas do jogo."""
         # Atualizar a lógica para o jogador atual corretamente
         screen_width = screen.get_width()
@@ -332,7 +332,7 @@ class UserInterface:
         )
 
     # Método auxiliar para carregar imagens
-    def load_image(self, filename, size=None):
+    def load_image(self, filename: str, size: Optional[Tuple[int, int]] = None) -> Optional[pygame.Surface]:
         """
         Carrega uma imagem do diretório src/assets/tiles e redimensiona, se necessário.
 
@@ -353,7 +353,7 @@ class UserInterface:
             return None
 
     # Método para criar o mapeamento de nomes para imagens
-    def get_image_map(self, size):
+    def get_image_map(self, size: Tuple[int, int]) -> Dict[str, Optional[pygame.Surface]]:
         """
         Cria um dicionário que mapeia nomes personalizados para imagens redimensionadas.
 
@@ -369,7 +369,7 @@ class UserInterface:
         }
         return image_map
 
-    def is_user_registered(self, username):
+    def is_user_registered(self, username: str) -> bool:
         """Verifica se o usuário já está registrado no arquivo."""
         try:
             with open(self.users_file, "r") as file:
@@ -378,7 +378,7 @@ class UserInterface:
         except FileNotFoundError:
             return False
 
-    def register_user(self, username):
+    def register_user(self, username: str) -> None:
         """Registra um novo usuário no arquivo."""
         with open(self.users_file, "a") as file:
             file.write(f"{username}\n")

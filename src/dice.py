@@ -1,43 +1,42 @@
 import pygame
 import random
 from constants import *
-
+from typing import Tuple, Optional, Any
 
 class Dice:
-    def __init__(self, position, size=(110, 55)):
+    def __init__(self, position: Tuple[int, int], size: Tuple[int, int] = (110, 55)) -> None:
         """
         Inicializa o dado com uma posição e tamanho para o botão.
         :param position: Tupla (x, y) indicando a posição do botão na tela.
         :param size: Tupla (largura, altura) indicando o tamanho do botão.
         """
-        self.position = position
-        self.size = size
-        self.result = None
-        self.button_rect = pygame.Rect(position[0], position[1], size[0], size[1])
+        self._position: Tuple[int, int] = position
+        self._size: Tuple[int, int] = size
+        self._result: Optional[int] = None
+        self._button_rect: pygame.Rect = pygame.Rect(position[0], position[1], size[0], size[1])
 
-    def roll(self):
+    def roll(self) -> int:
         """
         Gira o dado e retorna um valor entre 1 e 6.
         """
         self.result = random.randint(1, 6)
         return self.result
 
-    def draw(self, screen, interact, zoom, offset):
+    def draw(self, screen: pygame.Surface, interact: Any, zoom: float, offset: Tuple[int, int]) -> None:
         """
         Desenha o botão do dado na tela.
         :param screen: Superfície do Pygame onde o botão será desenhado.
         """
-        # Desenhar o botão
         dice_interact = next((i for i in interact if i.custom_name == "Dado"), None)
         jogar_interact = next((i for i in interact if i.custom_name == "Jogar"), None)
-        self.button_rect = pygame.Rect(
+        self._button_rect = pygame.Rect(
             (jogar_interact.x * zoom + offset[0]),
             (jogar_interact.y * zoom + offset[1]),
             jogar_interact.width * zoom,
             jogar_interact.height * zoom,
         )
         pygame.draw.rect(
-            screen, (BUTTON_GREEN), self.button_rect, border_radius=15
+            screen, BUTTON_GREEN, self._button_rect, border_radius=15
         )  # Retângulo Verde
 
         # Desenhar o texto "JOGAR"
@@ -58,7 +57,7 @@ class Dice:
             )
             screen.blit(result_text, result_text_rect)
 
-    def handle_event(self, event):
+    def handle_event(self, event: pygame.event.Event) -> Optional[int]:
         """
         Verifica se o botão foi clicado.
         :param event: Evento do Pygame.
@@ -70,3 +69,19 @@ class Dice:
             if self.button_rect.collidepoint(event.pos):
                 return self.roll()
         return None
+
+    @property
+    def position(self) -> Tuple[int, int]:
+        return self.position
+
+    @property
+    def size(self) -> Tuple[int, int]:
+        return self.size
+
+    @property
+    def result(self) -> Optional[int]:
+        return self.result
+
+    @property
+    def button_rect(self) -> pygame.Rect:
+        return self._button_rect

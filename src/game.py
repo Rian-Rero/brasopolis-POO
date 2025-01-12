@@ -1,43 +1,43 @@
 import pygame
+from typing import List,Tuple, Optional, Dict, Any
 from board import Board
 from user_interface import UserInterface
 from piece import Piece
 from player import Player
 from dice import Dice
 from DataBase.database import Database
-
-
+from house import House
 
 class Brasopolis:
-    def __init__(self):
+    def __init__(self) -> None:
         pygame.init()
-        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        self.screen: pygame.Surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         pygame.display.set_caption("Banco Imobiliário")
-        self.clock = pygame.time.Clock()
-        self.running = True
-        self.board = Board()
-        self.ui = UserInterface(self.screen)
-        self.players = []
-        self.pieces = []
-        self.current_player = 0
-        self.dice = Dice((260, 360))
-        self.prompt_data = None  # Armazena dados do prompt atual (se houver)
-        self.database = Database()
+        self.clock: pygame.time.Clock = pygame.time.Clock()
+        self.running: bool = True
+        self.board: Board = Board()
+        self.ui: UserInterface = UserInterface(self._screen)
+        self.players: List[Player] = []
+        self.pieces: List[Piece] = []
+        self.current_player: int = 0
+        self.dice: Dice = Dice((260, 360))
+        self.prompt_data: Optional[Dict[str, Any]] = None  # Armazena dados do prompt atual (se houver)
+        self.database: Database = Database()
 
-    def run(self):
-        player_count = self.ui.show_player_count_selection()
-        player_names = self.ui.show_login_screen(player_count)
+    def run(self) -> None:
+        player_count: int = self.ui.show_player_count_selection()
+        player_names: List[str] = self.ui.show_login_screen(player_count)
         self.players = [Player(name) for name in player_names]
         self.board.load_map()
         self.initialize_pieces()
         self.game_loop()
 
-    def save_records(self):
-        for player in self.players:
-            self.database.insert_record(player.name, player.money)
-        self.database.close()
+    def save_records(self) -> None:
+        for player in self._players:
+            self._database.insert_record(player.name, player.money)
+        self._database.close()
 
-    def handle_house_event(self, player, house):
+    def handle_house_event(self, player: Player, house: House) -> None:
         """Gerencia os eventos ao cair em uma casa."""
         if house.owner is None and house.status == "disponível":
             # Jogador pode comprar ou alugar a casa
@@ -60,7 +60,7 @@ class Brasopolis:
                     self.ui.show_message(f"{player.name} alugou {house.name}.")
         elif house.owner and house.owner != player:
             # Pagar aluguel ao proprietário
-            rent = house.custom_price * 0.05
+            rent: float = house.custom_price * 0.05
             if player.money >= rent:
                 player.money -= rent
                 house.owner.money += rent
@@ -84,7 +84,7 @@ class Brasopolis:
             self.ui.show_message(f"{player.name} está preso na casa {house.name}.")
             self.handle_prison(player)
 
-    def handle_prison(self, player):
+    def _handle_prison(self, player: Player) -> None:
         """Gerencia o comportamento de um jogador na prisão."""
         if player.money >= 200000:
             choice = self.ui.show_prison_escape_option()
@@ -92,19 +92,19 @@ class Brasopolis:
                 player.money -= 200000
                 self.ui.show_message(f"{player.name} pagou para sair da prisão.")
                 return
-        dice_value = self.dice.roll()
+        dice_value: int = self._dice.roll()
         self.ui.show_message(f"{player.name} tirou {dice_value} no dado.")
         if dice_value == 6:
             self.ui.show_message(f"{player.name} saiu da prisão!")
         else:
             player.skip_turns = 1
 
-    def move_current_player(self, dice_value):
+    def _move_current_player(self, dice_value: int) -> None:
         """Move o jogador atual no tabuleiro com base no resultado do dado."""
-        current_piece = self.pieces[self.current_player]
-        current_index = self.board.houses.index(current_piece.current_house)
-        next_index = (current_index + dice_value) % len(self.board.houses)
-        current_house = self.board.houses[next_index]
+        current_piece: Piece = self.pieces[self.current_player]
+        current_index: int = self.board.houses.index(current_piece.current_house)
+        next_index: int = (current_index + dice_value) % len(self.board.houses)
+        current_house: House = self.board.houses[next_index]
         current_piece.move_to(current_house)
 
         # Regras para casas especiais
@@ -127,7 +127,7 @@ class Brasopolis:
             current_house.is_owned()
             and current_house.owner != self.players[self.current_player]
         ):
-            rent = current_house.custom_price * 0.05
+            rent: float = current_house.custom_price * 0.05
             self.players[self.current_player].money -= rent
             current_house.owner.money += rent
 
@@ -142,30 +142,29 @@ class Brasopolis:
         if not self.prompt_data:
             self.switch_turn()
 
-    def initialize_pieces(self):
+    def initialize_pieces(self) -> None:
         """Inicializa as peças dos jogadores no tabuleiro."""
-        colors = [
+        colors: List[Tuple[int, int, int]] = [
             (255, 0, 0),
             (0, 255, 0),
             (0, 0, 255),
             (255, 255, 0),
         ]  # Cores das peças
         for i, player in enumerate(self.players):
-            initial_house = self.board.houses[
+            initial_house: House = self.board.houses[
                 0
             ]  # Casa inicial é a primeira do tabuleiro
-            piece = Piece(color=colors[i % len(colors)], initial_house=initial_house)
+            piece: Piece = Piece(color=colors[i % len(colors)], initial_house=initial_house)
             player.piece = piece
             self.pieces.append(piece)
 
-    def switch_turn(self):
+    def switch_turn(self) -> None:
         """Alterna o turno entre os jogadores."""
         self.current_player = (self.current_player + 1) % len(self.players)
 
-    def game_loop(self):
-
+    def game_loop(self) -> None:
         while self.running:
-            map_rect = self.board.get_scaled_map().get_rect(
+            map_rect: pygame.Rect = self.board.get_scaled_map().get_rect(
                 center=(self.screen.get_width() // 2, self.screen.get_height() // 2)
             )
             for event in pygame.event.get():
@@ -173,7 +172,7 @@ class Brasopolis:
                     self.running = False
 
                 # Verificar clique no botão do dado
-                dice_result = self.dice.handle_event(event)
+                dice_result: Optional[int] = self.dice.handle_event(event)
                 if dice_result and not self.prompt_data:
                     self.move_current_player(dice_result)
 
@@ -211,7 +210,7 @@ class Brasopolis:
 
             # Exibir prompt, se necessário
             if self.prompt_data:
-                action = self.ui.prompt_buy_or_rent(
+                action: str = self.ui.prompt_buy_or_rent(
                     self.prompt_data["house"],
                     self.board.interact,
                     self.board.zoom,
@@ -236,3 +235,47 @@ class Brasopolis:
             self.clock.tick(60)
 
         pygame.quit()
+
+    @property
+    def screen(self) -> pygame.Surface:
+        return self.screen
+
+    @property
+    def clock(self) -> pygame.time.Clock:
+        return self.clock
+
+    @property
+    def running(self) -> bool:
+        return self.running
+
+    @property
+    def board(self) -> Board:
+        return self.board
+
+    @property
+    def ui(self) -> UserInterface:
+        return self.ui
+
+    @property
+    def players(self) -> List[Player]:
+        return self.players
+
+    @property
+    def pieces(self) -> List[Piece]:
+        return self.pieces
+
+    @property
+    def current_player(self) -> int:
+        return self.current_player
+
+    @property
+    def dice(self) -> Dice:
+        return self.dice
+
+    @property
+    def prompt_data(self) -> Optional[Dict[str, Any]]:
+        return self.prompt_data
+
+    @property
+    def database(self) -> Database:
+        return self.database
