@@ -7,11 +7,15 @@ from player import FirstPlayer
 from dice import Dice
 from DataBase.database import Database
 from house import House
+from constants import *
+
 
 class Brasopolis:
     def __init__(self) -> None:
         pygame.init()
-        self._screen: pygame.Surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        self._screen: pygame.Surface = pygame.display.set_mode(
+            (0, 0), pygame.FULLSCREEN
+        )
         pygame.display.set_caption("Banco Imobiliário")
         self._clock: pygame.time.Clock = pygame.time.Clock()
         self._running: bool = True
@@ -21,7 +25,9 @@ class Brasopolis:
         self._pieces: List[Piece] = []
         self._current_player: int = 0
         self._dice: Dice = Dice((260, 360))
-        self._prompt_data: Optional[Dict[str, Any]] = None  # Armazena dados do prompt atual (se houver)
+        self._prompt_data: Optional[Dict[str, Any]] = (
+            None  # Armazena dados do prompt atual (se houver)
+        )
         self._database: Database = Database()
 
     def run(self) -> None:
@@ -50,7 +56,7 @@ class Brasopolis:
                     house.status = "vendido"
                     self._ui.show_message(f"{player.name} comprou {house.name}.")
                 else:
-                    self._ui.show_message("Dinheiro insuficiente para a compra.")   
+                    self._ui.show_message("Dinheiro insuficiente para a compra.")
             elif choice == "alugar":
                 if player.money >= house.custom_price * 0.2:  # 20% do preço para alugar
                     player.money -= house.custom_price * 0.2
@@ -145,16 +151,18 @@ class Brasopolis:
     def _initialize_pieces(self) -> None:
         """Inicializa as peças dos jogadores no tabuleiro."""
         colors: List[Tuple[int, int, int]] = [
-            (255, 0, 0),
-            (0, 255, 0),
-            (0, 0, 255),
-            (255, 255, 0),
+            RED,
+            PIECE_GREEEN,
+            PIECE_BLUE,
+            PIECE_YELLOW,
         ]  # Cores das peças
         for i, player in enumerate(self._players):
             initial_house: House = self._board.houses[
                 0
             ]  # Casa inicial é a primeira do tabuleiro
-            piece: Piece = Piece(color=colors[i % len(colors)], initial_house=initial_house)
+            piece: Piece = Piece(
+                color=colors[i % len(colors)], initial_house=initial_house
+            )
             player.piece = piece
             self._pieces.append(piece)
 
@@ -197,7 +205,9 @@ class Brasopolis:
                 center=(self._screen.get_width() // 2, self._screen.get_height() // 2)
             )
             for piece in self._pieces:
-                piece.draw(self._screen, self._board.zoom, (map_rect.left, map_rect.top))
+                piece.draw(
+                    self._screen, self._board.zoom, (map_rect.left, map_rect.top)
+                )
 
             self._ui.draw_interface(
                 self._screen,
@@ -219,7 +229,9 @@ class Brasopolis:
                 if action == "comprar":
                     self._prompt_data["house"].owner = self._prompt_data["player"]
                     self._prompt_data["house"].status = "comprada"
-                    self._prompt_data["player"].money -= self._prompt_data["house"].custom_price
+                    self._prompt_data["player"].money -= self._prompt_data[
+                        "house"
+                    ].custom_price
                 elif action == "alugar":
                     self._prompt_data["house"].owner = self._prompt_data["player"]
                     self._prompt_data["house"].status = "alugada"
