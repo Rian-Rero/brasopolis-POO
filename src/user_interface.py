@@ -158,7 +158,7 @@ class UserInterface:
             font_roboto_light = pygame.font.Font("src/assets/fonts/Roboto.ttf", round( 52 * zoom ))
             self.draw_text(
                 f"A casa '{house.custom_name}' custa R${house.custom_price}.",
-                (acao_button_interact.x * zoom + offset[0]) * 1.30,
+                (acao_button_interact.x * zoom + offset[0]) * 1.32,
                 (acao_button_interact.y * zoom + offset[1]) * 1.1,
                 font=font_roboto_light,
                 color=BLACK,

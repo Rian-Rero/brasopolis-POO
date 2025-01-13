@@ -1,7 +1,7 @@
 import sqlite3
 
 class Database:
-    def __init__(self, db_name="game_records.db"):
+    def __init__(self, db_name="src/DataBase/game_records.db"):
         self.connection = sqlite3.connect(db_name)
         self.create_table()
 
@@ -26,6 +26,15 @@ class Database:
     def get_all_records(self):
         with self.connection:
             return self.connection.execute("SELECT * FROM records").fetchall()
+
+    def show_the_records(self):
+        with self.connection:
+            return self.connection.execute("""
+                SELECT player_name, score, date
+                FROM records
+                ORDER BY score DESC
+                LIMIT 3
+            """).fetchall()
 
     def close(self):
         self.connection.close()
