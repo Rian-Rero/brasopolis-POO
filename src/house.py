@@ -2,6 +2,7 @@ from typing import Optional
 import pygame
 from abc import ABC, abstractmethod
 from typing import Optional
+from player import FirstPlayer
 
 class AbstractHouse(ABC):
     """Classe abstrata para representar elementos no tabuleiro."""
@@ -41,7 +42,7 @@ class House(AbstractHouse):
         self.custom_price: int = custom_price
         self.custom_gain: int = custom_gain
         self.custom_loss: int = custom_loss
-        self.owner: Optional[Player] = None
+        self.owner: Optional[FirstPlayer] = None
         self.status: str = "disponível"
         self.rent_turns_left: int = 0
 

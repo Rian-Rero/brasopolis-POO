@@ -1,7 +1,7 @@
 import pygame
 from pytmx.util_pygame import load_pygame
 from house import House
-from interact import Interact
+from interact import TextInteract
 from typing import List, Optional, Union
 
 class Board:
@@ -9,7 +9,7 @@ class Board:
         self.tmx_data: Optional[load_pygame.TiledMap] = None
         self.map_surface: Optional[pygame.Surface] = None
         self.houses: List[House] = []
-        self.interact: List[Union[House, Interact]] = []
+        self.interact: List[Union[House, TextInteract]] = []
         self.zoom: float = 0.6
         self.min_zoom: float = 0.2
         self.max_zoom: float = 2.0

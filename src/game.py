@@ -3,7 +3,7 @@ from typing import List, Tuple, Optional, Dict, Any
 from board import Board
 from user_interface import UserInterface
 from piece import Piece
-from player import Player
+from player import FirstPlayer
 from dice import Dice
 from DataBase.database import Database
 from house import House
@@ -17,7 +17,7 @@ class Brasopolis:
         self._running: bool = True
         self._board: Board = Board()
         self._ui: UserInterface = UserInterface(self._screen)
-        self._players: List[Player] = []
+        self._players: List[FirstPlayer] = []
         self._pieces: List[Piece] = []
         self._current_player: int = 0
         self._dice: Dice = Dice((260, 360))
@@ -27,7 +27,7 @@ class Brasopolis:
     def run(self) -> None:
         player_count: int = self._ui.show_player_count_selection()
         player_names: List[str] = self._ui.show_login_screen(player_count)
-        self._players = [Player(name) for name in player_names]
+        self._players = [FirstPlayer(name) for name in player_names]
         self._board.load_map()
         self._initialize_pieces()
         self._game_loop()
@@ -37,7 +37,7 @@ class Brasopolis:
             self._database.insert_record(player.name, player.money)
         self._database.close()
 
-    def handle_house_event(self, player: Player, house: House) -> None:
+    def handle_house_event(self, player: FirstPlayer, house: House) -> None:
         """Gerencia os eventos ao cair em uma casa."""
         if house.owner is None and house.status == "disponível":
             # Jogador pode comprar ou alugar a casa
@@ -84,7 +84,7 @@ class Brasopolis:
             self._ui.show_message(f"{player.name} está preso na casa {house.name}.")
             self._handle_prison(player)
 
-    def _handle_prison(self, player: Player) -> None:
+    def _handle_prison(self, player: FirstPlayer) -> None:
         """Gerencia o comportamento de um jogador na prisão."""
         if player.money >= 200000:
             choice = self._ui.show_prison_escape_option()
