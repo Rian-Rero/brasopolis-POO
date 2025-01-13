@@ -2,6 +2,7 @@ import pygame
 from constants import *
 from typing import Optional, List, Tuple, Dict, Any
 
+
 class UserInterface:
     def __init__(self, screen: pygame.Surface) -> None:
         self.screen: pygame.Surface = screen
@@ -141,7 +142,9 @@ class UserInterface:
 
         return players
 
-    def prompt_buy_or_rent(self, house: Any, interact: List[Any], zoom: float, offset: Tuple[int, int]) -> str:
+    def prompt_buy_or_rent(
+        self, house: Any, interact: List[Any], zoom: float, offset: Tuple[int, int]
+    ) -> str:
         """Exibe uma janela perguntando ao jogador se deseja comprar ou alugar a casa."""
         running: bool = True
         font_size: int = round(85 * zoom)
@@ -251,7 +254,14 @@ class UserInterface:
 
             clock.tick(30)
 
-    def draw_text(self, text: str, x: int, y: int, font: Optional[pygame.font.Font] = None, color: Tuple[int, int, int] = BLACK) -> None:
+    def draw_text(
+        self,
+        text: str,
+        x: int,
+        y: int,
+        font: Optional[pygame.font.Font] = None,
+        color: Tuple[int, int, int] = BLACK,
+    ) -> None:
         """Desenha texto na tela."""
         if font is None:
             font = self.font
@@ -259,7 +269,14 @@ class UserInterface:
         text_rect = text_surface.get_rect(center=(x, y))
         self.screen.blit(text_surface, text_rect)
 
-    def draw_text_simple(self, text: str, x: int, y: int, font: Optional[pygame.font.Font] = None, color: Tuple[int, int, int] = BLACK) -> None:
+    def draw_text_simple(
+        self,
+        text: str,
+        x: int,
+        y: int,
+        font: Optional[pygame.font.Font] = None,
+        color: Tuple[int, int, int] = BLACK,
+    ) -> None:
         """Desenha texto na tela nas coordenadas fornecidas."""
         if font is None:
             font = self.font
@@ -268,17 +285,35 @@ class UserInterface:
         self.screen.blit(text_surface, (x, y))
 
     def draw_interface(
-        self, screen: pygame.Surface, current_player: Any, current_piece: Any, interact: List[Any], zoom: float, offset: Tuple[int, int]
+        self,
+        screen: pygame.Surface,
+        current_player: Any,
+        current_piece: Any,
+        interact: List[Any],
+        zoom: float,
+        current_player_index: int,
+        offset: Tuple[int, int],
     ) -> None:
         """Exibe informações sobre o jogador atual e outras estatísticas do jogo."""
         # Atualizar a lógica para o jogador atual corretamente
         screen_width: int = screen.get_width()
-        player_interact: Any = next((i for i in interact if i.custom_name == "Player"), None)
-        saldo_interact: Any = next((i for i in interact if i.custom_name == "Saldo"), None)
-        cidade_interact: Any = next((i for i in interact if i.custom_name == "Cidade"), None)
-        carta_interact: Any = next((i for i in interact if i.custom_name == "Carta"), None)
+        player_interact: Any = next(
+            (i for i in interact if i.custom_name == "Player"), None
+        )
+        saldo_interact: Any = next(
+            (i for i in interact if i.custom_name == "Saldo"), None
+        )
+        cidade_interact: Any = next(
+            (i for i in interact if i.custom_name == "Cidade"), None
+        )
+        carta_interact: Any = next(
+            (i for i in interact if i.custom_name == "Carta"), None
+        )
         proprietario_interact: Any = next(
             (i for i in interact if i.custom_name == "Proprietario"), None
+        )
+        status_interact: Any = next(
+            (i for i in interact if i.custom_name == "Status"), None
         )
         aluguel_interact: Any = next(
             (i for i in interact if i.custom_name == "Aluguel"), None
@@ -300,11 +335,30 @@ class UserInterface:
             color=BLACK,
         )
 
+        self.draw_text(
+            f"{current_piece.current_house.status}",
+            (status_interact.x * zoom + offset[0]) * 1.1,
+            (status_interact.y * zoom + offset[1]) * 1.02,
+            font=self.small_font,
+            color=BLACK,
+        )
+        owner = current_piece.current_house.getOwner()
+
+        self.draw_text(
+            f"{owner}",
+            (proprietario_interact.x * zoom + offset[0]) * 1.07,
+            (proprietario_interact.y * zoom + offset[1]) * 1.02,
+            font=self.small_font,
+            color=BLACK,
+        )
+
         # Imagem do jogador atual
         image_map: Dict[str, pygame.Surface] = self.get_image_map(
             (carta_interact.width * zoom, carta_interact.height * zoom)
         )
-        image: Optional[pygame.Surface] = image_map.get(current_piece.current_house.custom_name)
+        image: Optional[pygame.Surface] = image_map.get(
+            current_piece.current_house.custom_name
+        )
         if image:
             screen.blit(
                 image,
@@ -329,7 +383,9 @@ class UserInterface:
         )
 
     # Método auxiliar para carregar imagens
-    def load_image(self, filename: str, size: Optional[Tuple[int, int]] = None) -> Optional[pygame.Surface]:
+    def load_image(
+        self, filename: str, size: Optional[Tuple[int, int]] = None
+    ) -> Optional[pygame.Surface]:
         """
         Carrega uma imagem do diretório src/assets/tiles e redimensiona, se necessário.
 
@@ -350,7 +406,9 @@ class UserInterface:
             return None
 
     # Método para criar o mapeamento de nomes para imagens
-    def get_image_map(self, size: Tuple[int, int]) -> Dict[str, Optional[pygame.Surface]]:
+    def get_image_map(
+        self, size: Tuple[int, int]
+    ) -> Dict[str, Optional[pygame.Surface]]:
         """
         Cria um dicionário que mapeia nomes personalizados para imagens redimensionadas.
 

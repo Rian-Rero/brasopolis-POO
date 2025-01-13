@@ -43,53 +43,6 @@ class Brasopolis:
             self._database.insert_record(player.name, player.money)
         self._database.close()
 
-    def handle_house_event(self, player: FirstPlayer, house: House) -> None:
-        """Gerencia os eventos ao cair em uma casa."""
-        if house.owner is None and house.status == "disponível":
-            # Jogador pode comprar ou alugar a casa
-            self._ui.show_message(f"{player.name}, você caiu na casa {house.name}.")
-            choice = self._ui.show_purchase_or_rent_option(house)
-            if choice == "comprar":
-                if player.money >= house.custom_price:
-                    player.money -= house.custom_price
-                    house.owner = player
-                    house.status = "vendido"
-                    self._ui.show_message(f"{player.name} comprou {house.name}.")
-                else:
-                    self._ui.show_message("Dinheiro insuficiente para a compra.")
-            elif choice == "alugar":
-                if player.money >= house.custom_price * 0.2:  # 20% do preço para alugar
-                    player.money -= house.custom_price * 0.2
-                    house.owner = player
-                    house.status = "alugado"
-                    house.rent_turns_left = 2  # Dura duas voltas completas
-                    self._ui.show_message(f"{player.name} alugou {house.name}.")
-        elif house.owner and house.owner != player:
-            # Pagar aluguel ao proprietário
-            rent: float = house.custom_price * 0.05
-            if player.money >= rent:
-                player.money -= rent
-                house.owner.money += rent
-                self._ui.show_message(
-                    f"{player.name} pagou R$ {rent:.2f} de aluguel para {house.owner.name}."
-                )
-            else:
-                self._ui.show_message(
-                    f"{player.name} não tem dinheiro suficiente para pagar o aluguel."
-                )
-                # Implementar lógica de falência, se necessário
-        elif house.custom_gain > 0:
-            # Casas de bônus
-            player.money += house.custom_gain
-            self._ui.show_message(f"{player.name} ganhou R$ {house.custom_gain:.2f}.")
-        elif house.custom_loss > 0:
-            # Casas de penalidade
-            player.money -= house.custom_loss
-            self._ui.show_message(f"{player.name} perdeu R$ {house.custom_loss:.2f}.")
-        elif house.name in ["Casa de Prisão"]:  # Exemplo para a casa índice 13
-            self._ui.show_message(f"{player.name} está preso na casa {house.name}.")
-            self._handle_prison(player)
-
     def _handle_prison(self, player: FirstPlayer) -> None:
         """Gerencia o comportamento de um jogador na prisão."""
         if player.money >= 200000:
@@ -124,7 +77,7 @@ class Brasopolis:
             self._players[self._current_player].turns_lost = 2
 
         # Gerenciar aluguel ou compra
-        if current_house.status == "disponível":
+        if current_house.status == "Disponível":
             self._prompt_data = {
                 "house": current_house,
                 "player": self._players[self._current_player],
@@ -136,13 +89,6 @@ class Brasopolis:
             rent: float = current_house.custom_price * 0.05
             self._players[self._current_player].money -= rent
             current_house.owner.money += rent
-
-        # Atualizar status de aluguel expirado
-        for house in self._board.houses:
-            if house.status == "alugada" and house.rent_turns_left > 0:
-                house.rent_turns_left -= 1
-            if house.rent_turns_left == 0:
-                house.reset_rent()
 
         # Alternar turno se não houver prompt
         if not self._prompt_data:
@@ -172,7 +118,9 @@ class Brasopolis:
 
     def _game_loop(self) -> None:
         while self._running:
-            map_rect: pygame.Rect = self._board.get_scaled_map().get_rect(
+            map_rect: (
+                pygame.Reccurrent_player.getNameByIndext
+            ) = self._board.get_scaled_map().get_rect(
                 center=(self._screen.get_width() // 2, self._screen.get_height() // 2)
             )
             for event in pygame.event.get():
@@ -215,6 +163,7 @@ class Brasopolis:
                 self._pieces[self._current_player],
                 self._board.interact,
                 self._board.zoom,
+                self._current_player,
                 (map_rect.left, map_rect.top),
             )
 
@@ -228,10 +177,11 @@ class Brasopolis:
                 )
                 if action == "comprar":
                     self._prompt_data["house"].owner = self._prompt_data["player"]
-                    self._prompt_data["house"].status = "comprada"
+                    self._prompt_data["house"].status = "Comprada"
                     self._prompt_data["player"].money -= self._prompt_data[
                         "house"
                     ].custom_price
+
                 elif action == "alugar":
                     self._prompt_data["house"].owner = self._prompt_data["player"]
                     self._prompt_data["house"].status = "alugada"
