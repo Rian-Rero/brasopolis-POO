@@ -1,6 +1,6 @@
 import pygame
 from constants import *
-from typing import List, Tuple, Optional, Dict, Any
+from typing import Optional, List, Tuple, Dict, Any
 
 class UserInterface:
     def __init__(self, screen: pygame.Surface) -> None:
@@ -9,26 +9,25 @@ class UserInterface:
         self.small_font: pygame.font.Font = pygame.font.Font(None, 35)
         self.custom_font: pygame.font.Font = pygame.font.Font(None, 30)
         self.users_file: str = "src/DataBase/users.txt"
-        
 
     def show_player_count_selection(self) -> int:
         """Exibe uma tela para o jogador selecionar a quantidade de jogadores."""
-        running = True
-        selected_count = None
+        running: bool = True
+        selected_count: Optional[int] = None
         while running:
             self.screen.fill((45, 86, 80))
             self.draw_text(
                 "Selecione o número de jogadores (2 a 4):",
                 self.screen.get_width() // 2,
                 100,
-                color=(WHITE),
+                color=WHITE,
             )
 
             # Botões para 2, 3 ou 4 jogadores
             screen_width, screen_height = self.screen.get_size()
             button_width, button_height = screen_width // 6, screen_height // 12
 
-            buttons = {
+            buttons: Dict[str, pygame.Rect] = {
                 "2": pygame.Rect(
                     (screen_width - button_width) // 2,
                     screen_height // 3,
@@ -77,22 +76,22 @@ class UserInterface:
 
     def show_login_screen(self, player_count: int) -> List[str]:
         """Exibe a tela de login/cadastro para o número de jogadores."""
-        players = []
+        players: List[str] = []
         for i in range(1, player_count + 1):
-            running = True
-            username = ""
+            running: bool = True
+            username: str = ""
             while running:
                 self.screen.fill((45, 86, 80))
                 self.draw_text(
                     f"Jogador {i}: Digite seu nome:",
                     self.screen.get_width() // 2,
                     100,
-                    color=(WHITE),
+                    color=WHITE,
                 )
 
                 # Campo de texto
                 input_box_width, input_box_height = 400, 50
-                input_box = pygame.Rect(
+                input_box: pygame.Rect = pygame.Rect(
                     (self.screen.get_width() - input_box_width) // 2,
                     (self.screen.get_height() - input_box_height) // 3,
                     input_box_width,
@@ -105,7 +104,7 @@ class UserInterface:
 
                 # Botão de confirmar
                 confirm_button_width, confirm_button_height = 200, 50
-                confirm_button = pygame.Rect(
+                confirm_button: pygame.Rect = pygame.Rect(
                     (self.screen.get_width() - confirm_button_width) // 2,
                     input_box.bottom + 20,
                     confirm_button_width,
@@ -144,57 +143,55 @@ class UserInterface:
 
     def prompt_buy_or_rent(self, house: Any, interact: List[Any], zoom: float, offset: Tuple[int, int]) -> str:
         """Exibe uma janela perguntando ao jogador se deseja comprar ou alugar a casa."""
-        running = True
-        font_size = round(85*zoom)
-        font = pygame.font.Font(None, font_size)
-        clock = pygame.time.Clock()
-        
+        running: bool = True
+        font_size: int = round(85 * zoom)
+        font: pygame.font.Font = pygame.font.Font(None, font_size)
+        clock: pygame.time.Clock = pygame.time.Clock()
 
         while running:
-            acao_button_interact = next(
+            acao_button_interact: Any = next(
                 (i for i in interact if i.custom_name == "Acao"), None
             )
-            #print(f"{acao_button_interact.x * zoom + offset[0]}")
             self.draw_text(
                 f"A casa '{house.custom_name}' custa R${house.custom_price}.",
                 (acao_button_interact.x * zoom + offset[0]) * 1.30,
-                (acao_button_interact.y * zoom + offset[1])* 1.1,
+                (acao_button_interact.y * zoom + offset[1]) * 1.1,
                 font=self.custom_font,
-                color=(BLACK),
+                color=BLACK,
             )
             # Botões
-            buy_button_interact = next(
+            buy_button_interact: Any = next(
                 (i for i in interact if i.custom_name == "Comprar"), None
             )
-            rent_button_interact = next(
+            rent_button_interact: Any = next(
                 (i for i in interact if i.custom_name == "AluguelBotao"), None
             )
-            sell_button_interact = next(
+            sell_button_interact: Any = next(
                 (i for i in interact if i.custom_name == "Vender"), None
             )
-            skip_button_interact = next(
+            skip_button_interact: Any = next(
                 (i for i in interact if i.custom_name == "Pular"), None
             )
 
-            buy_button = pygame.Rect(
+            buy_button: pygame.Rect = pygame.Rect(
                 (buy_button_interact.x * zoom + offset[0]),
                 (buy_button_interact.y * zoom + offset[1]),
                 buy_button_interact.width * zoom,
                 buy_button_interact.height * zoom,
             )
-            rent_button = pygame.Rect(
+            rent_button: pygame.Rect = pygame.Rect(
                 (rent_button_interact.x * zoom + offset[0]),
                 (rent_button_interact.y * zoom + offset[1]),
                 rent_button_interact.width * zoom,
                 rent_button_interact.height * zoom,
             )
-            sell_button = pygame.Rect(
+            sell_button: pygame.Rect = pygame.Rect(
                 (sell_button_interact.x * zoom + offset[0]),
                 (sell_button_interact.y * zoom + offset[1]),
                 sell_button_interact.width * zoom,
                 sell_button_interact.height * zoom,
             )
-            skip_button = pygame.Rect(
+            skip_button: pygame.Rect = pygame.Rect(
                 (skip_button_interact.x * zoom + offset[0]),
                 (skip_button_interact.y * zoom + offset[1]),
                 skip_button_interact.width * zoom,
@@ -202,38 +199,38 @@ class UserInterface:
             )
 
             # Desenhar botões
-            pygame.draw.rect(self.screen, (RENT_BUTTON), rent_button, border_radius=15)
-            pygame.draw.rect(self.screen, (BUY_BUTTON), buy_button, border_radius=15)
-            pygame.draw.rect(self.screen, (SELL_BUTTON), skip_button, border_radius=15)
-            pygame.draw.rect(self.screen, (SELL_BUTTON), sell_button, border_radius=15)
+            pygame.draw.rect(self.screen, RENT_BUTTON, rent_button, border_radius=15)
+            pygame.draw.rect(self.screen, BUY_BUTTON, buy_button, border_radius=15)
+            pygame.draw.rect(self.screen, SELL_BUTTON, skip_button, border_radius=15)
+            pygame.draw.rect(self.screen, SELL_BUTTON, sell_button, border_radius=15)
 
             self.draw_text(
                 "Comprar",
                 buy_button.centerx,
                 buy_button.centery,
                 font=font,
-                color=(WHITE),
+                color=WHITE,
             )
             self.draw_text(
                 "Alugar",
                 rent_button.centerx,
                 rent_button.centery,
                 font=font,
-                color=(BLACK),
+                color=BLACK,
             )
             self.draw_text(
                 "Pular",
                 skip_button.centerx,
                 skip_button.centery,
                 font=font,
-                color=(WHITE),
+                color=WHITE,
             )
             self.draw_text(
                 "Vender",
                 sell_button.centerx,
                 sell_button.centery,
                 font=font,
-                color=(WHITE),
+                color=WHITE,
             )
 
             pygame.display.flip()
@@ -275,15 +272,15 @@ class UserInterface:
     ) -> None:
         """Exibe informações sobre o jogador atual e outras estatísticas do jogo."""
         # Atualizar a lógica para o jogador atual corretamente
-        screen_width = screen.get_width()
-        player_interact = next((i for i in interact if i.custom_name == "Player"), None)
-        saldo_interact = next((i for i in interact if i.custom_name == "Saldo"), None)
-        cidade_interact = next((i for i in interact if i.custom_name == "Cidade"), None)
-        carta_interact = next((i for i in interact if i.custom_name == "Carta"), None)
-        proprietario_interact = next(
+        screen_width: int = screen.get_width()
+        player_interact: Any = next((i for i in interact if i.custom_name == "Player"), None)
+        saldo_interact: Any = next((i for i in interact if i.custom_name == "Saldo"), None)
+        cidade_interact: Any = next((i for i in interact if i.custom_name == "Cidade"), None)
+        carta_interact: Any = next((i for i in interact if i.custom_name == "Carta"), None)
+        proprietario_interact: Any = next(
             (i for i in interact if i.custom_name == "Proprietario"), None
         )
-        aluguel_interact = next(
+        aluguel_interact: Any = next(
             (i for i in interact if i.custom_name == "Aluguel"), None
         )
         # Nome do jogador atual
@@ -292,7 +289,7 @@ class UserInterface:
             (player_interact.x * zoom + offset[0]) * 1.45,
             (player_interact.y * zoom + offset[1]) * 1.05,
             font=self.small_font,
-            color=(BLACK),
+            color=BLACK,
         )
         # Mostrar saldo do jogador atual
         self.draw_text(
@@ -300,14 +297,14 @@ class UserInterface:
             (saldo_interact.x * zoom + offset[0]) * 1.25,
             (saldo_interact.y * zoom + offset[1]) * 1.03,
             font=self.small_font,
-            color=(BLACK),
+            color=BLACK,
         )
 
         # Imagem do jogador atual
-        image_map = self.get_image_map(
+        image_map: Dict[str, pygame.Surface] = self.get_image_map(
             (carta_interact.width * zoom, carta_interact.height * zoom)
         )
-        image = image_map.get(current_piece.current_house.custom_name)
+        image: Optional[pygame.Surface] = image_map.get(current_piece.current_house.custom_name)
         if image:
             screen.blit(
                 image,
@@ -321,14 +318,14 @@ class UserInterface:
             (cidade_interact.x * zoom + offset[0]) * 1.1,
             (cidade_interact.y * zoom + offset[1]) * 1.02,
             font=self.small_font,
-            color=(BLACK),
+            color=BLACK,
         )
         self.draw_text(
-            f"{(current_piece.current_house.custom_price)*0.05:.2f}",
+            f"{(current_piece.current_house.custom_price) * 0.05:.2f}",
             (aluguel_interact.x * zoom + offset[0]) * 1.08,
             (aluguel_interact.y * zoom + offset[1]) * 1.02,
             font=self.small_font,
-            color=(BLACK),
+            color=BLACK,
         )
 
     # Método auxiliar para carregar imagens
@@ -340,9 +337,9 @@ class UserInterface:
         :param size: Tupla (largura, altura) para redimensionar a imagem. Se None, mantém o tamanho original.
         :return: Objeto Surface da imagem carregada ou None em caso de erro.
         """
-        path = f"src/assets/tiles/{filename}"  # Caminho completo para o arquivo
+        path: str = f"src/assets/tiles/{filename}"  # Caminho completo para o arquivo
         try:
-            image = pygame.image.load(
+            image: pygame.Surface = pygame.image.load(
                 path
             ).convert_alpha()  # Carregar imagem com transparência
             if size:  # Redimensionar a imagem, se necessário
@@ -360,10 +357,10 @@ class UserInterface:
         :param size: Tupla (largura, altura) para redimensionar as imagens.
         :return: Dicionário mapeando nomes para imagens.
         """
-        custom_names = CUSTOM_NAMES
-        image_filenames = IMAGE_FILENAMES
+        custom_names: List[str] = CUSTOM_NAMES
+        image_filenames: List[str] = IMAGE_FILENAMES
 
-        image_map = {
+        image_map: Dict[str, Optional[pygame.Surface]] = {
             custom_name: self.load_image(filename, size=size)
             for custom_name, filename in zip(custom_names, image_filenames)
         }
@@ -373,7 +370,7 @@ class UserInterface:
         """Verifica se o usuário já está registrado no arquivo."""
         try:
             with open(self.users_file, "r") as file:
-                users = file.readlines()
+                users: List[str] = file.readlines()
             return username in (user.strip() for user in users)
         except FileNotFoundError:
             return False
