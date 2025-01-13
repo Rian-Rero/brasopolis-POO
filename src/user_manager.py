@@ -1,8 +1,8 @@
 import os
-from typing import Dict, Optional
+from typing import Dict
 
 class UserManager:
-    def __init__(self, filepath: str = "src/DataBase/users.txt") -> None:
+    def __init__(self, filepath: str = "users.txt") -> None:
         self.filepath: str = filepath
         if not os.path.exists(filepath):
             with open(filepath, "w") as f:

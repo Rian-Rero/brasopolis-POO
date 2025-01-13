@@ -1,7 +1,8 @@
 from typing import Optional
 import pygame
 from abc import ABC, abstractmethod
-from player import Player
+from typing import Optional
+
 class AbstractHouse(ABC):
     """Classe abstrata para representar elementos no tabuleiro."""
 
