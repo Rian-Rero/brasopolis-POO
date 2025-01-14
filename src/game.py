@@ -41,7 +41,7 @@ class Brasopolis:
     def save_records(self) -> None:
         for player in self._players:
             self._database.insert_record(player.name, player.money)
-        #self._database.close()
+        # self._database.close()
 
     def _handle_prison(self, player: FirstPlayer) -> None:
         """Gerencia o comportamento de um jogador na prisão."""
@@ -137,13 +137,12 @@ class Brasopolis:
 
                 # Tratar eventos de teclado
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_l: # Pressionar 'L' para fechar o jogo
+                    if event.key == pygame.K_l:  # Pressionar 'L' para fechar o jogo
                         self.save_records()
                         self._running = False
                     if event.key == pygame.K_o:
-                        print (self._database.get_all_records())
-                        print (self._database.show_the_records())
-
+                        print(self._database.get_all_records())
+                        print(self._database.show_the_records())
 
             # Atualizar e desenhar elementos na tela
             self._screen.fill((0, 0, 0))
@@ -203,9 +202,9 @@ class Brasopolis:
                         self._prompt_data["house"].owner = self._prompt_data["player"]
                         self._prompt_data["house"].status = "alugada"
                         self._prompt_data["house"].rent_turns_left = 2
-                        self._prompt_data["player"].money -= self._prompt_data[
-                            "house"
-                        ].rent_price
+                        self._prompt_data["player"].money -= (
+                            self._prompt_data["house"].custom_price * 0.05
+                        )
                     else:
                         self._ui.displayAlert(
                             self._board.interact,
