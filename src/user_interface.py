@@ -307,10 +307,14 @@ class UserInterface:
 
         # Define as dimensões e posição do fundo vermelho
         background_rect = pygame.Rect(
-            (acao_button_interact.x * zoom + offset[0]) * 0.8,  # Margem esquerda
+            (acao_button_interact.x * zoom + offset[0]) * 0.9,  # Margem esquerda
             (acao_button_interact.y * zoom + offset[1]) * 0.905,  # Margem superior
-            text_width * 1.1,  # Largura do texto + margens laterais
-            text_height * 2.9,  # Altura do texto + margens superior e inferior
+            acao_button_interact.width
+            * zoom
+            * 1.3,  # Largura do texto + margens laterais
+            acao_button_interact.height
+            * zoom
+            * 2.9,  # Altura do texto + margens superior e inferior
         )
 
         # Registra o tempo inicial
