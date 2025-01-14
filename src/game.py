@@ -212,7 +212,6 @@ class Brasopolis:
                             (map_rect.left, map_rect.top),
                             "Você não tem dinheiro suficiente para alugar esta propriedade!",
                         )
-
                 # Limpar o estado do prompt e alternar turno
                 self._prompt_data = None
                 self._switch_turn()

@@ -298,15 +298,45 @@ class UserInterface:
             (i for i in interact if i.custom_name == "Acao"), None
         )
         font_roboto_light = pygame.font.Font(
-            "src/assets/fonts/Roboto.ttf", round(52 * zoom)
+            "src/assets/fonts/Roboto.ttf", round(50 * zoom)
         )
-        self.draw_text(
-            f"{text}",
-            (acao_button_interact.x * zoom + offset[0]) * 1.30,
-            (acao_button_interact.y * zoom + offset[1]) * 1.1,
-            font=font_roboto_light,
-            color=BLACK,
+
+        # Renderiza o texto em uma superfície
+        text_surface = font_roboto_light.render(text, True, BLACK)
+        text_width, text_height = text_surface.get_size()
+
+        # Define as dimensões e posição do fundo vermelho
+        background_rect = pygame.Rect(
+            (acao_button_interact.x * zoom + offset[0]) * 0.8,  # Margem esquerda
+            (acao_button_interact.y * zoom + offset[1]) * 0.905,  # Margem superior
+            text_width * 1.1,  # Largura do texto + margens laterais
+            text_height * 2.9,  # Altura do texto + margens superior e inferior
         )
+
+        # Registra o tempo inicial
+        start_time = pygame.time.get_ticks()
+
+        # Loop para exibir por 3 segundos
+        while True:
+            current_time = pygame.time.get_ticks()
+            if current_time - start_time > 1500:  # 3 segundos em milissegundos
+                break
+
+            # Desenha o fundo vermelho
+            pygame.draw.rect(self.screen, BACKGROUND2, background_rect)
+
+            # Desenha o texto
+            self.draw_text(
+                f"{text}",
+                (acao_button_interact.x * zoom + offset[0]) * 1.30,
+                (acao_button_interact.y * zoom + offset[1]) * 1.1,
+                font=font_roboto_light,
+                color=BLACK,
+            )
+
+            pygame.display.flip()  # Atualiza o display
+
+        # Opcional: faça algo depois que o alerta desaparecer
 
     def draw_interface(
         self,
@@ -342,7 +372,7 @@ class UserInterface:
         aluguel_interact: Any = next(
             (i for i in interact if i.custom_name == "Aluguel"), None
         )
-        
+
         inputs_font = pygame.font.Font(None, round(95 * zoom))
 
         # Nome do jogador atual
