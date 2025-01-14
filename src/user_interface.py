@@ -342,12 +342,15 @@ class UserInterface:
         aluguel_interact: Any = next(
             (i for i in interact if i.custom_name == "Aluguel"), None
         )
+        
+        inputs_font = pygame.font.Font(None, round(95 * zoom))
+
         # Nome do jogador atual
         self.draw_text(
             f"{current_player.name}",
             (player_interact.x * zoom + offset[0]) * 1.45,
             (player_interact.y * zoom + offset[1]) * 1.05,
-            font=self.small_font,
+            font=inputs_font,
             color=BLACK,
         )
         # Mostrar saldo do jogador atual
@@ -355,24 +358,26 @@ class UserInterface:
             f"{current_player.money:.2f}",
             (saldo_interact.x * zoom + offset[0]) * 1.25,
             (saldo_interact.y * zoom + offset[1]) * 1.03,
-            font=self.small_font,
+            font=inputs_font,
             color=BLACK,
         )
 
+        # Mostrar status da casa atual
         self.draw_text(
             f"{current_piece.current_house.status}",
             (status_interact.x * zoom + offset[0]) * 1.1,
             (status_interact.y * zoom + offset[1]) * 1.02,
-            font=self.small_font,
+            font=inputs_font,
             color=BLACK,
         )
         owner = current_piece.current_house.getOwner()
 
+        # Mostrar proprietário da casa atual
         self.draw_text(
             f"{owner}",
             (proprietario_interact.x * zoom + offset[0]) * 1.07,
             (proprietario_interact.y * zoom + offset[1]) * 1.02,
-            font=self.small_font,
+            font=inputs_font,
             color=BLACK,
         )
 
@@ -395,14 +400,14 @@ class UserInterface:
             f"{current_piece.current_house.custom_name}",
             (cidade_interact.x * zoom + offset[0]) * 1.1,
             (cidade_interact.y * zoom + offset[1]) * 1.02,
-            font=self.small_font,
+            font=inputs_font,
             color=BLACK,
         )
         self.draw_text(
             f"{(current_piece.current_house.custom_price) * 0.05:.2f}",
             (aluguel_interact.x * zoom + offset[0]) * 1.08,
             (aluguel_interact.y * zoom + offset[1]) * 1.02,
-            font=self.small_font,
+            font=inputs_font,
             color=BLACK,
         )
 
