@@ -5,7 +5,7 @@ from user_interface import UserInterface
 from piece import Piece
 from player import FirstPlayer
 from dice import Dice
-from DataBase.database import Database
+from database import Database
 from house import House
 from constants import *
 
@@ -41,7 +41,7 @@ class Brasopolis:
     def save_records(self) -> None:
         for player in self._players:
             self._database.insert_record(player.name, player.money)
-        self._database.close()
+        #self._database.close()
 
     def _handle_prison(self, player: FirstPlayer) -> None:
         """Gerencia o comportamento de um jogador na prisão."""
@@ -137,8 +137,13 @@ class Brasopolis:
 
                 # Tratar eventos de teclado
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_l:  # Pressionar 'L' para fechar o jogo
+                    if event.key == pygame.K_l: # Pressionar 'L' para fechar o jogo
+                        self.save_records()
                         self._running = False
+                    if event.key == pygame.K_o:
+                        print (self._database.get_all_records())
+                        print (self._database.show_the_records())
+
 
             # Atualizar e desenhar elementos na tela
             self._screen.fill((0, 0, 0))
