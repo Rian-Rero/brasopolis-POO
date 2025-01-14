@@ -9,6 +9,8 @@ class AbstractPlayer(ABC):
         self._name: str = name
         self._position: int = 0
         self._money: int = money
+        self.is_jailed = False  # Inicialmente, o jogador não está preso
+        self.turns_lost = 0
 
     @abstractmethod
     def move(self, steps: int) -> None:
@@ -42,7 +44,11 @@ class AbstractPlayer(ABC):
 class FirstPlayer(AbstractPlayer):
     """Classe para representar o primeiro tipo de jogador."""
 
-    def __init__(self, name: str, money: int = 2000000) -> None:
+    def __init__(
+        self,
+        name: str,
+        money: int = 2000000,
+    ) -> None:
         super().__init__(name, money)
 
     def move(self, steps: int) -> None:

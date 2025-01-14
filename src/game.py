@@ -43,21 +43,6 @@ class Brasopolis:
             self._database.insert_record(player.name, player.money)
         # self._database.close()
 
-    def _handle_prison(self, player: FirstPlayer) -> None:
-        """Gerencia o comportamento de um jogador na prisão."""
-        if player.money >= 200000:
-            choice = self._ui.show_prison_escape_option()
-            if choice == "pagar":
-                player.money -= 200000
-                self._ui.show_message(f"{player.name} pagou para sair da prisão.")
-                return
-        dice_value: int = self._dice.roll()
-        self._ui.show_message(f"{player.name} tirou {dice_value} no dado.")
-        if dice_value == 6:
-            self._ui.show_message(f"{player.name} saiu da prisão!")
-        else:
-            player.skip_turns = 1
-
     def _move_current_player(self, dice_value: int) -> None:
         """Move o jogador atual no tabuleiro com base no resultado do dado."""
         current_piece: Piece = self._pieces[self._current_player]
@@ -75,6 +60,9 @@ class Brasopolis:
             self._players[self._current_player].money -= 100000
         elif next_index == 20 or next_index == 34:  # Perde turnos
             self._players[self._current_player].turns_lost = 2
+        elif next_index == 13:  # Jogador está preso
+            self._players[self._current_player].is_jailed = True
+            self._players[self._current_player].turns_lost = 0  # Enquanto preso
 
         # Gerenciar aluguel ou compra
         if current_house.status == "Disponivel" or current_house.status == "Comprada":
@@ -121,6 +109,54 @@ class Brasopolis:
             map_rect = self._board.get_scaled_map().get_rect(
                 center=(self._screen.get_width() // 2, self._screen.get_height() // 2)
             )
+            if self._players[self._current_player].is_jailed:
+                action = self._ui.prompt_jail_action(
+                    self._screen,
+                    self._players[self._current_player],
+                    self._board.interact,
+                    self._board.zoom,
+                    (map_rect.left, map_rect.top),
+                )
+                if action == "roll":  # Tentar tirar 6 no dado
+                    dice_result = self._dice.roll()
+                    if dice_result == 6:
+                        self._players[self._current_player].is_jailed = False
+                        self._ui.displayAlert(
+                            self._board.interact,
+                            self._board.zoom,
+                            (map_rect.left, map_rect.top),
+                            "Você tirou 6 e saiu da prisão!",
+                        )
+                    else:
+                        self._ui.displayAlert(
+                            self._board.interact,
+                            self._board.zoom,
+                            (map_rect.left, map_rect.top),
+                            f"Você tirou {dice_result}. Ainda está preso!",
+                        )
+                        self._switch_turn()
+                        continue
+
+                elif action == "pay":  # Pagar 200.000 para sair
+                    if self._players[self._current_player].money >= 200000:
+                        self._players[self._current_player].money -= 200000
+                        self._players[self._current_player].is_jailed = False
+                        self._ui.displayAlert(
+                            self._board.interact,
+                            self._board.zoom,
+                            (map_rect.left, map_rect.top),
+                            "Você pagou 200.000 e saiu da prisão!",
+                        )
+                    else:
+                        self._ui.displayAlert(
+                            self._board.interact,
+                            self._board.zoom,
+                            (map_rect.left, map_rect.top),
+                            "Você não tem dinheiro suficiente para pagar a fiança!",
+                        )
+                        self._switch_turn()
+                        continue
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self._running = False
@@ -128,7 +164,7 @@ class Brasopolis:
                 # Verificar clique no botão do dado
                 dice_result: Optional[int] = self._dice.handle_event(event)
                 if dice_result and not self._prompt_data:
-                    self._move_current_player(3)
+                    self._move_current_player(13)
 
                 # Tratar eventos do tabuleiro
                 self._board.handle_event(event)

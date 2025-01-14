@@ -1,6 +1,7 @@
 import pygame
 from constants import *
 from typing import Optional, List, Tuple, Dict, Any
+from player import FirstPlayer
 
 
 class UserInterface:
@@ -500,3 +501,62 @@ class UserInterface:
         """Registra um novo usuário no arquivo."""
         with open(self.users_file, "a") as file:
             file.write(f"{username}\n")
+
+    def prompt_jail_action(self, screen, player, interact, zoom, offset) -> str:
+        """Exibe opções para jogador preso (tentar sair ou pagar)."""
+        self.draw_text(
+            f"{player.name}, você está preso! Escolha uma opção:",
+            20,
+            20,
+            font=self.small_font,
+            color=WHITE,
+        )
+        clock: pygame.time.Clock = pygame.time.Clock()
+
+        jogar_interact = next((i for i in interact if i.custom_name == "Jogar"), None)
+
+        # Botões
+        try_button_rect = pygame.Rect(
+            (jogar_interact.x * zoom + offset[0]),
+            (jogar_interact.y * zoom + offset[1]),
+            (jogar_interact.width * zoom),
+            (jogar_interact.height * zoom),
+        )
+        pay_button_rect = pygame.Rect(
+            (800),
+            (800),
+            (20),
+            (20),
+        )
+        pygame.draw.rect(screen, BUTTON_GREEN, try_button_rect, border_radius=15)
+        pygame.draw.rect(screen, BUTTON_GREEN, pay_button_rect, border_radius=15)
+
+        font_size = round(55 * zoom)
+        font = pygame.font.Font(None, font_size)
+        self.draw_text(
+            "Sorte",
+            try_button_rect.centerx,
+            try_button_rect.centery,
+            font=font,
+            color=WHITE,
+        )
+        self.draw_text(
+            "Pagar",
+            pay_button_rect.centerx,
+            pay_button_rect.centery,
+            font=font,
+            color=BLACK,
+        )
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if try_button_rect.collidepoint(event.pos):
+                    return "roll"
+                elif pay_button_rect.collidepoint(event.pos):
+                    return "pay"
+
+        clock.tick(30)
