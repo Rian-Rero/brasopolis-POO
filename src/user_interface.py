@@ -11,10 +11,11 @@ class UserInterface:
         self.custom_font: pygame.font.Font = pygame.font.Font(None, 30)
         self.users_file: str = "src/DataBase/users.txt"
 
-    def show_player_count_selection(self) -> int:
+    def show_player_count_selection(self, database) -> int:
         """Exibe uma tela para o jogador selecionar a quantidade de jogadores."""
         running: bool = True
         selected_count: Optional[int] = None
+
         while running:
             self.screen.fill((45, 86, 80))
             self.draw_text(
@@ -49,10 +50,29 @@ class UserInterface:
                 ),
             }
 
+            record_button: Dict[str, pygame.Rect] = {
+                "Recordes": pygame.Rect(
+                    (screen_width - button_width) // 2,
+                    screen_height // 3 + 3 * (button_height + 20),
+                    button_width,
+                    button_height,
+                )
+            }
+
+            # Desenhar botão de recorde
+            for label, rect in record_button.items():
+                pygame.draw.rect(self.screen, (111, 185, 174), rect)
+                self.draw_text(
+                    label,
+                    rect.centerx,
+                    rect.centery,
+                    font=self.small_font,
+                    color=(255, 255, 255),
+                )
+
             # Desenhar botões
             for label, rect in buttons.items():
                 pygame.draw.rect(self.screen, (111, 185, 174), rect)
-                # Desenhar texto sobre o botão
                 self.draw_text(
                     label,
                     rect.centerx,
@@ -72,8 +92,35 @@ class UserInterface:
                         if rect.collidepoint(event.pos):
                             selected_count = int(label)
                             running = False
+                    for label, rect in record_button.items():
+                        if rect.collidepoint(event.pos):
+                            # Limpar a tela para exibir os recordes
+                            self.screen.fill((45, 86, 80))
+                            self.draw_text(
+                                "Maiores Recordes:",
+                                self.screen.get_width() // 2,
+                                50,
+                                color=WHITE,
+                            )
 
+                            # Exibir os recordes
+                            records = database.show_the_records()
+                            for i, record in enumerate(records):
+                                    # Concatenar os três primeiros elementos do record (presume-se que seja uma lista ou tupla)
+                                    concatenated_record = "                  ".join(map(str, record[:3]))
+                                    self.draw_text(
+                                    concatenated_record,
+                                    self.screen.get_width() // 2,
+                                    100 + i * 90,  # Espaçamento entre os recordes
+                                    font=self.small_font,
+                                    color=(255, 255, 255),
+                                    )
+
+                            pygame.display.flip()
+                            pygame.time.wait(3000)  # Espera 3 segundos antes de voltar
+                            break  # Sai do loop de botões
         return selected_count
+
 
     def show_login_screen(self, player_count: int) -> List[str]:
         """Exibe a tela de login/cadastro para o número de jogadores."""
