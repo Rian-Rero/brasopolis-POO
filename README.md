@@ -5,7 +5,9 @@
 ## brasopolis-POO
 
 
-<img src="(https://imgur.com/a/iawZtzm)" alt="Diagrama UML POO">
+![DIagrama UML POO](https://imgur.com/a/iawZtzm)
 
-<img src="(https://imgur.com/a/IAuBbwF)" alt="Fluxograma UML POO">
+
+![Fluxograma UML POO](https://imgur.com/a/IAuBbwF)
+
 
