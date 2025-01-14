@@ -41,7 +41,7 @@ class Brasopolis:
     def save_records(self) -> None:
         for player in self._players:
             self._database.insert_record(player.name, player.money)
-        # self._database.close()
+            self._database.close()
 
     def _handle_prison(self, player: FirstPlayer) -> None:
         """Gerencia o comportamento de um jogador na prisão."""
@@ -75,6 +75,8 @@ class Brasopolis:
             self._players[self._current_player].money -= 100000
         elif next_index == 20 or next_index == 34:  # Perde turnos
             self._players[self._current_player].turns_lost = 2
+        elif next_index == 13:
+            self._players[self._current_player].money -= 200000
 
         # Gerenciar aluguel ou compra
         if current_house.status == "Disponivel" or current_house.status == "Comprada":
