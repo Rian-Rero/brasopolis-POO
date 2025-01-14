@@ -31,7 +31,9 @@ class Brasopolis:
         self._database: Database = Database()
 
     def run(self) -> None:
-        player_count: int = self._ui.show_player_count_selection()
+        player_count: int = self._ui.show_player_count_selection(self._database)
+        while not isinstance(player_count, int):
+            player_count = self._ui.show_player_count_selection(self._database)
         player_names: List[str] = self._ui.show_login_screen(player_count)
         self._players = [FirstPlayer(name) for name in player_names]
         self._board.load_map()
@@ -157,6 +159,7 @@ class Brasopolis:
             map_rect = self._board.get_scaled_map().get_rect(
                 center=(self._screen.get_width() // 2, self._screen.get_height() // 2)
             )
+
             for piece in self._pieces:
                 piece.draw(
                     self._screen, self._board.zoom, (map_rect.left, map_rect.top)
