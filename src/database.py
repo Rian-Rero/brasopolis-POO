@@ -30,7 +30,7 @@ class Database:
     def show_the_records(self):
         with self.connection:
             return self.connection.execute("""
-                SELECT player_name, score, date
+                SELECT player_name, score
                 FROM records
                 ORDER BY score DESC
                 LIMIT 3
