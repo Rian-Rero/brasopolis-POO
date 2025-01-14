@@ -175,17 +175,39 @@ class Brasopolis:
                     self._board.zoom,
                     (map_rect.left, map_rect.top),
                 )
+
                 if action == "comprar":
-                    self._prompt_data["house"].owner = self._prompt_data["player"]
-                    self._prompt_data["house"].status = "Comprada"
-                    self._prompt_data["player"].money -= self._prompt_data[
-                        "house"
-                    ].custom_price
+                    house_price = self._prompt_data["house"].custom_price
+                    if self._prompt_data["player"].money >= house_price:
+                        self._prompt_data["house"].owner = self._prompt_data["player"]
+                        self._prompt_data["house"].status = "Comprada"
+                        self._prompt_data["player"].money -= house_price
+                    else:
+                        self._ui.displayAlert(
+                            self._board.interact,
+                            self._board.zoom,
+                            (map_rect.left, map_rect.top),
+                            "Você não tem dinheiro suficiente para comprar esta propriedade!",
+                        )
 
                 elif action == "alugar":
-                    self._prompt_data["house"].owner = self._prompt_data["player"]
-                    self._prompt_data["house"].status = "alugada"
-                    self._prompt_data["house"].rent_turns_left = 2
+                    if (
+                        self._prompt_data["player"].money
+                        >= self._prompt_data["house"].custom_price * 0.05
+                    ):
+                        self._prompt_data["house"].owner = self._prompt_data["player"]
+                        self._prompt_data["house"].status = "alugada"
+                        self._prompt_data["house"].rent_turns_left = 2
+                        self._prompt_data["player"].money -= self._prompt_data[
+                            "house"
+                        ].rent_price
+                    else:
+                        self._ui.displayAlert(
+                            self._board.interact,
+                            self._board.zoom,
+                            (map_rect.left, map_rect.top),
+                            "Você não tem dinheiro suficiente para alugar esta propriedade!",
+                        )
 
                 # Limpar o estado do prompt e alternar turno
                 self._prompt_data = None
