@@ -29,7 +29,7 @@ class AbstractHouse(ABC):
 
     @abstractmethod
     def is_available(self) -> bool:
-        """Verifica se o elemento está Disponível para interação."""
+        """Verifica se o elemento está Disponivel para interação."""
         pass
 
 
@@ -54,7 +54,7 @@ class House(AbstractHouse):
         self.custom_gain: int = custom_gain
         self.custom_loss: int = custom_loss
         self.owner: Optional[FirstPlayer] = None
-        self.status: str = "Disponível"
+        self.status: str = "Disponivel"
         self.rent_turns_left: int = 0
 
     def __repr__(self) -> str:
@@ -65,7 +65,7 @@ class House(AbstractHouse):
 
     def reset_rent(self) -> None:
         self.owner = None
-        self.status = "Disponível"
+        self.status = "Disponivel"
         self.rent_turns_left = 0
 
     def rent(self, turns: int) -> None:
@@ -78,7 +78,7 @@ class House(AbstractHouse):
             self.rent_turns_left -= 1
 
     def is_available(self) -> bool:
-        """Verifica se a casa está Disponível para compra ou aluguel."""
+        """Verifica se a casa está Disponivel para compra ou aluguel."""
         return self.rent_turns_left == 0 and self.owner is None
 
     def getOwner(self) -> str:

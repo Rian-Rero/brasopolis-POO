@@ -42,7 +42,7 @@ class AbstractPlayer(ABC):
 class FirstPlayer(AbstractPlayer):
     """Classe para representar o primeiro tipo de jogador."""
 
-    def __init__(self, name: str, money: int = 100000) -> None:
+    def __init__(self, name: str, money: int = 2000000) -> None:
         super().__init__(name, money)
 
     def move(self, steps: int) -> None:

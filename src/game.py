@@ -77,7 +77,7 @@ class Brasopolis:
             self._players[self._current_player].turns_lost = 2
 
         # Gerenciar aluguel ou compra
-        if current_house.status == "Disponível":
+        if current_house.status == "Disponivel" or current_house.status == "Comprada":
             self._prompt_data = {
                 "house": current_house,
                 "player": self._players[self._current_player],
@@ -118,9 +118,7 @@ class Brasopolis:
 
     def _game_loop(self) -> None:
         while self._running:
-            map_rect: (
-                pygame.Reccurrent_player.getNameByIndext
-            ) = self._board.get_scaled_map().get_rect(
+            map_rect = self._board.get_scaled_map().get_rect(
                 center=(self._screen.get_width() // 2, self._screen.get_height() // 2)
             )
             for event in pygame.event.get():
@@ -130,7 +128,7 @@ class Brasopolis:
                 # Verificar clique no botão do dado
                 dice_result: Optional[int] = self._dice.handle_event(event)
                 if dice_result and not self._prompt_data:
-                    self._move_current_player(dice_result)
+                    self._move_current_player(3)
 
                 # Tratar eventos do tabuleiro
                 self._board.handle_event(event)
@@ -181,40 +179,71 @@ class Brasopolis:
                 )
 
                 if action == "comprar":
-                    house_price = self._prompt_data["house"].custom_price
-                    if self._prompt_data["player"].money >= house_price:
-                        self._prompt_data["house"].owner = self._prompt_data["player"]
-                        self._prompt_data["house"].status = "Comprada"
-                        self._prompt_data["player"].money -= house_price
+                    if self._prompt_data["house"].status == "Disponivel":
+                        house_price = self._prompt_data["house"].custom_price
+                        if self._prompt_data["player"].money >= house_price:
+                            self._prompt_data["house"].owner = self._prompt_data[
+                                "player"
+                            ]
+                            self._prompt_data["house"].status = "Comprada"
+                            self._prompt_data["player"].money -= house_price
+                            self._prompt_data = None  # Permite trocar de turno
+                            self._switch_turn()
+                        else:
+                            self._ui.displayAlert(
+                                self._board.interact,
+                                self._board.zoom,
+                                (map_rect.left, map_rect.top),
+                                "Você não tem dinheiro suficiente para comprar esta propriedade!",
+                            )
                     else:
                         self._ui.displayAlert(
                             self._board.interact,
                             self._board.zoom,
                             (map_rect.left, map_rect.top),
-                            "Você não tem dinheiro suficiente para comprar esta propriedade!",
+                            "A propriedade já foi comprada!",
                         )
 
                 elif action == "alugar":
                     if (
-                        self._prompt_data["player"].money
-                        >= self._prompt_data["house"].custom_price * 0.05
+                        self._prompt_data["house"].owner
+                        and self._prompt_data["house"].owner
+                        != self._prompt_data["player"]
                     ):
-                        self._prompt_data["house"].owner = self._prompt_data["player"]
-                        self._prompt_data["house"].status = "alugada"
-                        self._prompt_data["house"].rent_turns_left = 2
-                        self._prompt_data["player"].money -= (
-                            self._prompt_data["house"].custom_price * 0.05
-                        )
+                        rent_cost = self._prompt_data["house"].custom_price * 0.05
+                        if self._prompt_data["player"].money >= rent_cost:
+                            self._prompt_data["player"].money -= rent_cost
+                            self._prompt_data["house"].owner.money += rent_cost
+                            self._prompt_data = None  # Permite trocar de turno
+                            self._switch_turn()
+                        else:
+                            self._ui.displayAlert(
+                                self._board.interact,
+                                self._board.zoom,
+                                (map_rect.left, map_rect.top),
+                                "Você não tem dinheiro suficiente para pagar o aluguel!",
+                            )
                     else:
                         self._ui.displayAlert(
                             self._board.interact,
                             self._board.zoom,
                             (map_rect.left, map_rect.top),
-                            "Você não tem dinheiro suficiente para alugar esta propriedade!",
+                            "A propriedade não está disponível para aluguel!",
                         )
-                # Limpar o estado do prompt e alternar turno
-                self._prompt_data = None
-                self._switch_turn()
+
+                elif action == "vender":
+                    if self._prompt_data["house"].owner == self._prompt_data["player"]:
+                        self._prompt_data["house"].owner = None
+                        self._prompt_data["house"].status = "Disponivel"
+                        self._prompt_data = None  # Permite trocar de turno
+                        self._switch_turn()
+                    else:
+                        self._ui.displayAlert(
+                            self._board.interact,
+                            self._board.zoom,
+                            (map_rect.left, map_rect.top),
+                            "Você não é o dono desta propriedade!",
+                        )
 
             pygame.display.flip()
             self._clock.tick(60)
