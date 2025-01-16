@@ -450,7 +450,7 @@
     <property name="customType" value="Botao"/>
    </properties>
   </object>
-  <object id="64" name="Acao" x="1600" y="448" width="1120" height="64">
+  <object id="64" name="Acao" x="1600.00" y="448.00" width="1120.00" height="64.00">
     <properties>
       <property name="customName" value="Acao"/>
       <property name="customType" value="Botao"/>
