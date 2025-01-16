@@ -249,6 +249,17 @@ class Brasopolis:
                             (map_rect.left, map_rect.top),
                             "Você não é o dono desta propriedade!",
                         )
+                elif action == "nenhuma":
+                    if self._prompt_data["house"].status == "Disponivel":
+                        self._prompt_data = None
+                        self._switch_turn()
+                    else:
+                        self._ui.displayAlert(
+                            self._board.interact,
+                            self._board.zoom,
+                            (map_rect.left, map_rect.top),
+                            "Voce não pode pular!",
+                        )
 
             pygame.display.flip()
             self._clock.tick(60)
