@@ -132,7 +132,7 @@ class Brasopolis:
                 # Verificar clique no botão do dado
                 dice_result: Optional[int] = self._dice.handle_event(event)
                 if dice_result and not self._prompt_data:
-                    self._move_current_player(3)
+                    self._move_current_player(dice_result)
 
                 # Tratar eventos do tabuleiro
                 self._board.handle_event(event)
