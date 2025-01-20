@@ -106,21 +106,22 @@ class UserInterface:
                             # Exibir os recordes
                             records = database.show_the_records()
                             for i, record in enumerate(records):
-                                    # Concatenar os três primeiros elementos do record (presume-se que seja uma lista ou tupla)
-                                    concatenated_record = "                  ".join(map(str, record[:3]))
-                                    self.draw_text(
+                                # Concatenar os três primeiros elementos do record (presume-se que seja uma lista ou tupla)
+                                concatenated_record = "                  ".join(
+                                    map(str, record[:3])
+                                )
+                                self.draw_text(
                                     concatenated_record,
                                     self.screen.get_width() // 2,
                                     100 + i * 90,  # Espaçamento entre os recordes
                                     font=self.small_font,
                                     color=(255, 255, 255),
-                                    )
+                                )
 
                             pygame.display.flip()
                             pygame.time.wait(3000)  # Espera 3 segundos antes de voltar
                             break  # Sai do loop de botões
         return selected_count
-
 
     def show_login_screen(self, player_count: int) -> List[str]:
         """Exibe a tela de login/cadastro para o número de jogadores."""
@@ -382,7 +383,7 @@ class UserInterface:
                 (acao_button_interact.x * zoom + offset[0]) * 1.30,
                 (acao_button_interact.y * zoom + offset[1]) * 1.1,
                 font=font_roboto_light,
-                color=BLACK,
+                color=WHITE,
             )
 
             pygame.display.flip()  # Atualiza o display
